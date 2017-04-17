@@ -29,9 +29,9 @@ resource "ignition_file" "profile-env" {
 
   content {
     content = <<EOF
-export HTTP_PROXY=${var.http_proxy}
-export HTTPS_PROXY=${var.https_proxy}
-export NO_PROXY=127.0.0.1
+export http_proxy=${var.http_proxy}
+export https_proxy=${var.https_proxy}
+export no_proxy=127.0.0.1
 EOF
   }
 }
@@ -45,9 +45,9 @@ resource "ignition_file" "default-env" {
   content {
     content = <<EOF
 [Manager]
-DefaultEnvironment=HTTP_PROXY=${var.http_proxy}"
-DefaultEnvironment=HTTPS_PROXY=${var.https_proxy}"
-DefaultEnvironment=NO_PROXY=127.0.0.1
+DefaultEnvironment=http_proxy=${var.http_proxy}
+DefaultEnvironment=https_proxy=${var.https_proxy}
+DefaultEnvironment=no_proxy=127.0.0.1
 EOF
   }
 }
