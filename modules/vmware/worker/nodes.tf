@@ -1,6 +1,6 @@
 resource "vsphere_virtual_machine" "worker_node" {
   count     = "${var.count}"
-  name      = "${var.cluster_name}-worker-${count.index}"
+  name      = "${var.hostname["${count.index}"]}"
   datacenter      = "${var.vmware_datacenter}"
   cluster         = "${var.vmware_cluster}"
   vcpu            = "${var.vm_vcpu}"
