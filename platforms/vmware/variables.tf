@@ -57,6 +57,18 @@ variable "tectonic_vmware_cluster" {
   description   = "vCenter Cluster used to create VMs under"
 }
 
+variable "tectonic_vmware_tectonicaddress" {
+  type          = "string"
+  description   = "FQDN of Tectonic cluster. Default syntax will be used if empty"
+  default       = ""
+}
+
+variable "tectonic_vmware_apiaddress" {
+  type          = "string"
+  description   = "FQDN of Kubernetes API. Default syntax will be used if empty"
+  default       = ""
+}
+
 // # Node Settings
 
 variable "tectonic_vmware_etcd_vm_vcpu" {
@@ -153,4 +165,16 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOF
   description   = "DNS Server for the infrastructure"
+}
+
+variable "tectonic_vmware_httpproxy" {
+  type = "string"
+  description = "HTTP Proxy variable"
+  default = ""
+}
+
+variable "tectonic_vmware_httpsproxy" {
+  type = "string"
+  description = "HTTPS Proxy variable"
+  default = ""
 }

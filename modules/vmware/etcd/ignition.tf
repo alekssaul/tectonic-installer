@@ -7,6 +7,8 @@ resource "ignition_config" "etcd" {
 
   files = [
     "${ignition_file.hostname-etcd.*.id[count.index]}",
+    "${ignition_file.profile-env.id}",
+    "${ignition_file.default-env.id}",
   ]
 
   systemd = [
@@ -17,6 +19,37 @@ resource "ignition_config" "etcd" {
   networkd = [
   "${ignition_networkd_unit.vmnetwork.*.id[count.index]}",
   ]
+}
+
+resource "ignition_file" "profile-env" {
+  path       = "/etc/profile.env"
+  mode       = 0644
+  uid        = 0
+  filesystem = "root"
+
+  content {
+    content = <<EOF
+export HTTP_PROXY=${var.http_proxy}
+export HTTPS_PROXY=${var.https_proxy}
+export NO_PROXY=127.0.0.1
+EOF
+  }
+}
+
+resource "ignition_file" "default-env" {
+  path       = "/etc/systemd/system.conf.d/10-default-env.conf"
+  mode       = 0644
+  uid        = 0
+  filesystem = "root"
+
+  content {
+    content = <<EOF
+[Manager]
+DefaultEnvironment=HTTP_PROXY=${var.http_proxy}"
+DefaultEnvironment=HTTPS_PROXY=${var.https_proxy}"
+DefaultEnvironment=NO_PROXY=127.0.0.1
+EOF
+  }
 }
 
 resource "ignition_networkd_unit" "vmnetwork" {

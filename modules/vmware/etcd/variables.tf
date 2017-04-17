@@ -89,3 +89,15 @@ variable hostname {
   type = "map"
   description = "Hostname of the node"
 }
+
+variable "http_proxy" {
+  type = "string"
+  description = "HTTP Proxy variable"
+  default = ""
+}
+
+variable "https_proxy" {
+  type = "string"
+  description = "HTTPS Proxy variable"
+  default = ""
+}

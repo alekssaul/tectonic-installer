@@ -2,8 +2,8 @@ module "bootkube" {
   source         = "../../modules/bootkube"
   cloud_provider = "vsphere"
 
-  kube_apiserver_url = "https://${var.tectonic_cluster_name}-k8s.${var.tectonic_base_domain}:443"
-  oidc_issuer_url    = "https://${var.tectonic_cluster_name}.${var.tectonic_base_domain}:443/identity"
+  kube_apiserver_url = "https://${var.tectonic_vmware_apiaddress}.${var.tectonic_base_domain}:443"
+  oidc_issuer_url    = "https://${var.tectonic_vmware_apiaddress}.${var.tectonic_base_domain}:443/identity"
 
   # Platform-independent variables wiring, do not modify.
   container_images = "${var.tectonic_container_images}"
@@ -32,8 +32,10 @@ module "tectonic" {
   source   = "../../modules/tectonic"
   platform = "vsphere"
 
-  base_address       = "${var.tectonic_cluster_name}.${var.tectonic_base_domain}:443"
-  kube_apiserver_url = "https://${var.tectonic_cluster_name}-k8s.${var.tectonic_base_domain}:443"
+  base_address       = "${var.tectonic_vmware_tectonicaddress}.${var.tectonic_base_domain}:443"
+
+  kube_apiserver_url = "https://${var.tectonic_vmware_apiaddress}.${var.tectonic_base_domain}:443"
+ 
 
   # Platform-independent variables wiring, do not modify.
   container_images = "${var.tectonic_container_images}"

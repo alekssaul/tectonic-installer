@@ -75,3 +75,6 @@ tectonic_vmware_vm_mastergateway = "192.168.246.1"
 tectonic_vmware_vm_workergateway = "192.168.246.1"
 tectonic_vmware_vm_dns = "192.168.246.100"
 
+tectonic_vmware_httpproxy = ""
+tectonic_vmware_httpsproxy = ""
+
