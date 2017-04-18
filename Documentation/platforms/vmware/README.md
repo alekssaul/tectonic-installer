@@ -8,7 +8,6 @@
 1. Convert the Container Linux image into a Virtual Machine template.
 1. Pre-Allocated IP addresses for the cluster and pre-create DNS records
 
-
 ## DNS and IP address allocation
 
 Prior to the start of setup create required DNS records. Below is a sample table of 3 etcd nodes, 2 master nodes and 2 worker nodes. 
@@ -29,6 +28,8 @@ Prior to the start of setup create required DNS records. Below is a sample table
 
 
 ## Getting Started
+
+Below steps need to be executed on machine that has network connectivity to VMware vCenter API and SSH access to Tectonic Master Server(s).
 
 First, download Terraform with via `make`. This will download the pinned Terraform binary and modules:
 
