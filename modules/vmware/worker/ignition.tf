@@ -145,7 +145,7 @@ resource "ignition_file" "profile-env" {
     content = <<EOF
 export http_proxy=${var.http_proxy}
 export https_proxy=${var.https_proxy}
-export no_proxy=127.0.0.1
+export NO_PROXY="127.0.0.1,localhost,.${var.base_domain}"
 EOF
   }
 }
@@ -161,7 +161,7 @@ resource "ignition_file" "default-env" {
 [Manager]
 DefaultEnvironment=http_proxy=${var.http_proxy}
 DefaultEnvironment=https_proxy=${var.https_proxy}
-DefaultEnvironment=no_proxy=127.0.0.1
+DefaultEnvironment=NO_PROXY="127.0.0.1,localhost,.${var.base_domain}"
 EOF
   }
 }

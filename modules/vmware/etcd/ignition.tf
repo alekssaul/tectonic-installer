@@ -31,7 +31,7 @@ resource "ignition_file" "profile-env" {
     content = <<EOF
 export http_proxy=${var.http_proxy}
 export https_proxy=${var.https_proxy}
-export no_proxy=127.0.0.1
+export NO_PROXY="127.0.0.1,localhost,.${var.base_domain}"
 EOF
   }
 }
@@ -47,7 +47,7 @@ resource "ignition_file" "default-env" {
 [Manager]
 DefaultEnvironment=http_proxy=${var.http_proxy}
 DefaultEnvironment=https_proxy=${var.https_proxy}
-DefaultEnvironment=no_proxy=127.0.0.1
+DefaultEnvironment=NO_PROXY="127.0.0.1,localhost,.${var.base_domain}"
 EOF
   }
 }
@@ -81,9 +81,9 @@ resource "ignition_systemd_unit" "etcd3" {
 Environment="ETCD_IMAGE=${var.container_image}"
 ExecStart=
 ExecStart=/usr/lib/coreos/etcd-wrapper \
-  --name=${var.cluster_name}-etcd-${count.index} \
-  --advertise-client-urls=http://${var.cluster_name}-etcd-${count.index}.${var.base_domain}:2379 \
-  --initial-advertise-peer-urls=http://${var.cluster_name}-etcd-${count.index}.${var.base_domain}:2380 \
+  --name=${var.hostname["${count.index}"]} \
+  --advertise-client-urls=http://${var.hostname["${count.index}"]}.${var.base_domain}:2379 \
+  --initial-advertise-peer-urls=http://${var.hostname["${count.index}"]}.${var.base_domain}:2380 \
   --listen-client-urls=http://0.0.0.0:2379 \
   --listen-peer-urls=http://0.0.0.0:2380 \
   --initial-cluster="${join("," , data.template_file.etcd-cluster.*.rendered)}" 
@@ -96,8 +96,8 @@ data "template_file" "etcd-cluster" {
   template = "${file("${path.module}/resources/etcd-cluster")}"
   count = "${var.count}"
   vars = {
-    etcd-name = "${var.cluster_name}-etcd-${count.index}"
-    etcd-address = "${var.cluster_name}-etcd-${count.index}.${var.base_domain}"
+    etcd-name = "${var.hostname["${count.index}"]}"
+    etcd-address = "${var.hostname["${count.index}"]}.${var.base_domain}"
   }
 
 }

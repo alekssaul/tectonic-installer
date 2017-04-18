@@ -43,38 +43,38 @@ tectonic_vmware_vm_etcd_hostnames = {
   "1" = "vsphere-etcd1"
   "2" = "vsphere-etcd2"
 }
-
 tectonic_vmware_vm_etcdips = {
   "0" = "192.168.246.10/24"
   "1" = "192.168.246.11/24"
   "2" = "192.168.246.12/24"
 }
+tectonic_vmware_vm_etcdgateway = "192.168.246.1"
 
 tectonic_vmware_vm_master_hostnames = {
   "0" = "vsphere-master0"
   "1" = "vsphere-master1"
 }
-
 tectonic_vmware_vm_masterips = {
   "0" = "192.168.246.20/24"
   "1" = "192.168.246.21/24"
 }
+tectonic_vmware_vm_mastergateway = "192.168.246.1"
 
 tectonic_vmware_vm_worker_hostnames = {
   "0" = "vsphere-worker0"
   "1" = "vsphere-worker1"
 }
-
 tectonic_vmware_vm_workerips = {
   "0" = "192.168.246.30/24"
   "1" = "192.168.246.31/24"
 }
-
-tectonic_vmware_vm_etcdgateway = "192.168.246.1"
-tectonic_vmware_vm_mastergateway = "192.168.246.1"
 tectonic_vmware_vm_workergateway = "192.168.246.1"
+
 tectonic_vmware_vm_dns = "192.168.246.100"
 
 tectonic_vmware_httpproxy = ""
 tectonic_vmware_httpsproxy = ""
+
+tectonic_vmware_tectonicaddress = "tectonic"
+tectonic_vmware_apiaddress = "tectonic-api"
 

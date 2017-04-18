@@ -11,8 +11,6 @@
 
 ## DNS and IP address allocation
 
-Tectonic Virtual Machine named follow the $clustername-etcd-$instancenumber, $clustername-master-$instancenumber, $clustername-worker-$instancenumber syntax. The manifests for VMware within this repository assume static allocation of IP Addresses.
-
 Prior to the start of setup create required DNS records. Below is a sample table of 3 etcd nodes, 2 master nodes and 2 worker nodes. 
 
 | Record | Type | Value |
