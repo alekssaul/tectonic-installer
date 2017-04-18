@@ -14,6 +14,7 @@ resource "vsphere_virtual_machine" "worker_node" {
   disk {
     datastore     = "${var.vm_disk_datastore}"  
     template      = "${var.vm_disk_template_folder}/${var.vm_disk_template}"
+    type          = "thin"
   }
 
   custom_configuration_parameters {
