@@ -42,6 +42,7 @@ UseDomains=yes
 Domains=${var.base_domain}
 EOF
 }
+
 resource "ignition_systemd_unit" "vmtoolsd_member" {
   name = "vmtoolsd.service"
   enable = true
@@ -145,7 +146,7 @@ resource "ignition_file" "profile-env" {
     content = <<EOF
 export http_proxy=${var.http_proxy}
 export https_proxy=${var.https_proxy}
-export NO_PROXY="127.0.0.1,localhost,.${var.base_domain}"
+export NO_PROXY="127.0.0.1,localhost,.${var.base_domain},${join(",", formatlist("%s", var.etcd_fqdns))}"
 EOF
   }
 }
@@ -161,10 +162,11 @@ resource "ignition_file" "default-env" {
 [Manager]
 DefaultEnvironment=http_proxy=${var.http_proxy}
 DefaultEnvironment=https_proxy=${var.https_proxy}
-DefaultEnvironment=NO_PROXY="127.0.0.1,localhost,.${var.base_domain}"
+DefaultEnvironment=NO_PROXY="127.0.0.1,localhost,.${var.base_domain},${join(",", formatlist("%s:2379", var.etcd_fqdns))}"
 EOF
   }
 }
+
 
 resource "ignition_file" "kubelet-env" {
   filesystem = "root"

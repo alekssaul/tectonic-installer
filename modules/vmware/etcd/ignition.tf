@@ -31,7 +31,7 @@ resource "ignition_file" "profile-env" {
     content = <<EOF
 export http_proxy=${var.http_proxy}
 export https_proxy=${var.https_proxy}
-export NO_PROXY="127.0.0.1,localhost,.${var.base_domain}"
+export NO_PROXY="127.0.0.1,localhost,.${var.base_domain},${join("," , data.template_file.etcd-cluster-proxy.*.rendered)}"
 EOF
   }
 }
@@ -47,7 +47,7 @@ resource "ignition_file" "default-env" {
 [Manager]
 DefaultEnvironment=http_proxy=${var.http_proxy}
 DefaultEnvironment=https_proxy=${var.https_proxy}
-DefaultEnvironment=NO_PROXY="127.0.0.1,localhost,.${var.base_domain}"
+DefaultEnvironment=NO_PROXY="127.0.0.1,localhost,.${var.base_domain},${join("," , data.template_file.etcd-cluster-proxy.*.rendered)}"
 EOF
   }
 }
@@ -97,6 +97,15 @@ data "template_file" "etcd-cluster" {
   count = "${var.count}"
   vars = {
     etcd-name = "${var.hostname["${count.index}"]}"
+    etcd-address = "${var.hostname["${count.index}"]}.${var.base_domain}"
+  }
+
+}
+
+data "template_file" "etcd-cluster-proxy" {
+  template = "${file("${path.module}/resources/etcd-cluster-proxy")}"
+  count = "${var.count}"
+  vars = {
     etcd-address = "${var.hostname["${count.index}"]}.${var.base_domain}"
   }
 
