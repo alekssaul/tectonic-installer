@@ -178,3 +178,9 @@ variable "tectonic_vmware_httpsproxy" {
   description = "HTTPS Proxy variable"
   default = ""
 }
+
+variable "tectonic_vmware_noproxy" {
+  type = "string"
+  description = "no_proxy variable, defaults to 127.0.0.1,localhost,.$cluster.domain"
+  default = ""
+}

@@ -28,6 +28,22 @@ resource "ignition_config" "master" {
   ]
 }
 
+data "template_file" "profile-env" {
+  template = "${file("${path.module}/resources/profile.env")}"
+
+  vars {
+    http_proxy   = "${var.http_proxy}"
+    https_proxy = "${var.https_proxy}" 
+    no_proxy = "${length(var.no_proxy) == 0 ? (null_resource.noproxy.triggers.no_proxy) : var.no_proxy}"
+  }
+}
+
+resource "null_resource" "noproxy" {
+    triggers = {
+        no_proxy = "127.0.0.1,localhost,.${var.base_domain},${join(",", formatlist("%s", var.etcd_fqdns))}" 
+    }
+}
+
 resource "ignition_file" "profile-env" {
   path       = "/etc/profile.env"
   mode       = 0644
@@ -35,11 +51,17 @@ resource "ignition_file" "profile-env" {
   filesystem = "root"
 
   content {
-    content = <<EOF
-export http_proxy=${var.http_proxy}
-export https_proxy=${var.https_proxy}
-export NO_PROXY="127.0.0.1,localhost,.${var.base_domain},${join(",", formatlist("%s", var.etcd_fqdns))}"
-EOF
+    content = "${data.template_file.profile-env.rendered}"    
+  }
+}
+
+data "template_file" "default-env" {
+  template = "${file("${path.module}/resources/10-default-env.conf")}"
+
+  vars {
+    http_proxy   = "${var.http_proxy}"
+    https_proxy = "${var.https_proxy}"        
+    no_proxy = "${length(var.no_proxy) == 0 ? (null_resource.noproxy.triggers.no_proxy) : var.no_proxy}"
   }
 }
 
@@ -50,12 +72,7 @@ resource "ignition_file" "default-env" {
   filesystem = "root"
 
   content {
-    content = <<EOF
-[Manager]
-DefaultEnvironment=http_proxy=${var.http_proxy}
-DefaultEnvironment=https_proxy=${var.https_proxy}
-DefaultEnvironment=NO_PROXY="127.0.0.1,localhost,.${var.base_domain},${join(",", formatlist("%s:2379", var.etcd_fqdns))}"
-EOF
+    content = "${data.template_file.default-env.rendered}"
   }
 }
 

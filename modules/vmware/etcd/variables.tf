@@ -101,3 +101,9 @@ variable "https_proxy" {
   description = "HTTPS Proxy variable"
   default = ""
 }
+
+variable "no_proxy" {
+  type = "string"
+  description = "NO_Proxy variable"
+  default = ""
+}

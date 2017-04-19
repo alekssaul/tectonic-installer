@@ -27,7 +27,8 @@ The Tectonic Installer variables used for: platform-vmware.
 | tectonic_vmware_vm_mastergateway | Gateway IP of Master VMs | | yes |
 | tectonic_vmware_vm_workergateway | Gateway IP of Worker VMs | | yes |
 | tectonic_vmware_vm_dns | DNS IP of all VMs | | yes |
-| tectonic_vmware_httpproxy | HTTP_PROXY variable for deployments behind proxy | | yes |
-| tectonic_vmware_httpsproxy | HTTPS_PROXY variable for deployments behind proxy | | yes |
+| tectonic_vmware_httpproxy | HTTP_PROXY variable for deployments behind proxy | | no |
+| tectonic_vmware_httpsproxy | HTTPS_PROXY variable for deployments behind proxy | | no |
+| tectonic_vmware_noproxy | NO_PROXY variable for deployments behind proxy | | no |
 | tectonic_vmware_tectonicaddress | Name of DNS record pointing to worker nodes without the domain name syntax ex:cluster  | | yes |
 | tectonic_vmware_apiaddress | Name of DNS record pointing to master nodes without the domain name syntax ex:cluster-api | | yes |
