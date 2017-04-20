@@ -27,6 +27,7 @@ variable "tectonic_container_images" {
     flannel                   = "quay.io/coreos/flannel:v0.7.0-amd64"
     etcd                      = "quay.io/coreos/etcd:v3.1.2"
     awscli                    = "quay.io/coreos/awscli:025a357f05242fdad6a81e8a6b520098aa65a600"
+    busybox                   = "docker.io/library/busybox"
   }
 }
 
