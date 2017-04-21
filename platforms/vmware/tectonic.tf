@@ -3,7 +3,7 @@ module "bootkube" {
   cloud_provider = "vsphere"
 
   kube_apiserver_url = "https://${var.tectonic_vmware_apiaddress}.${var.tectonic_base_domain}:443"
-  oidc_issuer_url    = "https://${var.tectonic_vmware_apiaddress}.${var.tectonic_base_domain}:443/identity"
+  oidc_issuer_url    = "https://${var.tectonic_vmware_tectonicaddress}.${var.tectonic_base_domain}:443/identity"
 
   # Platform-independent variables wiring, do not modify.
   container_images = "${var.tectonic_container_images}"
