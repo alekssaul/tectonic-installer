@@ -119,18 +119,21 @@ variable "tectonic_cl_channel" {
 }
 
 variable "tectonic_update_server" {
-  type    = "string"
-  default = "https://public.update.core-os.net"
+  type        = "string"
+  default     = "https://tectonic.update.core-os.net"
+  description = "The URL of the Tectonic Omaha update server"
 }
 
 variable "tectonic_update_channel" {
-  type    = "string"
-  default = "tectonic-1.5"
+  type        = "string"
+  default     = "tectonic-1.5"
+  description = "The Tectonic Omaha update channel"
 }
 
 variable "tectonic_update_app_id" {
-  type    = "string"
-  default = "6bc7b986-4654-4a0f-94b3-84ce6feb1db4"
+  type        = "string"
+  default     = "6bc7b986-4654-4a0f-94b3-84ce6feb1db4"
+  description = "The Tectonic Omaha update App ID"
 }
 
 variable "tectonic_admin_email" {
