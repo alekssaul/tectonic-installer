@@ -27,12 +27,23 @@ resource "aws_launch_configuration" "worker_conf" {
   image_id             = "${data.aws_ami.coreos_ami.image_id}"
   name_prefix          = "${var.cluster_name}-worker-"
   key_name             = "${var.ssh_key}"
-  security_groups      = ["${concat(list(aws_security_group.worker_sec_group.id), var.extra_sg_ids)}"]
+  security_groups      = ["${var.sg_ids}"]
   iam_instance_profile = "${aws_iam_instance_profile.worker_profile.arn}"
   user_data            = "${var.user_data}"
 
   lifecycle {
     create_before_destroy = true
+
+    # Ignore changes in the AMI which force recreation of the resource. This
+    # avoids accidental deletion of nodes whenever a new CoreOS Release comes
+    # out.
+    ignore_changes = ["image_id"]
+  }
+
+  root_block_device {
+    volume_type = "${var.root_volume_type}"
+    volume_size = "${var.root_volume_size}"
+    iops        = "${var.root_volume_iops}"
   }
 }
 
@@ -56,14 +67,16 @@ resource "aws_autoscaling_group" "workers" {
     propagate_at_launch = true
   }
 
+  tags = ["${var.autoscaling_group_extra_tags}"]
+
   lifecycle {
     create_before_destroy = true
   }
 }
 
 resource "aws_iam_instance_profile" "worker_profile" {
-  name  = "${var.cluster_name}-worker-profile"
-  roles = ["${aws_iam_role.worker_role.name}"]
+  name = "${var.cluster_name}-worker-profile"
+  role = "${aws_iam_role.worker_role.name}"
 }
 
 resource "aws_iam_role" "worker_role" {

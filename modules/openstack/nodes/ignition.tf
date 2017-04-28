@@ -1,51 +1,29 @@
-resource "ignition_config" "master" {
-  count = "${var.master_count}"
+data "ignition_config" "node" {
+  count = "${var.instance_count}"
 
   users = [
-    "${ignition_user.core.id}",
+    "${data.ignition_user.core.id}",
   ]
 
   files = [
-    "${ignition_file.kubeconfig.id}",
-    "${ignition_file.kubelet-env.id}",
-    "${ignition_file.max-user-watches.id}",
-    "${ignition_file.resolv_conf.id}",
-    "${ignition_file.hostname-master.*.id[count.index]}",
+    "${data.ignition_file.kubeconfig.id}",
+    "${data.ignition_file.kubelet-env.id}",
+    "${data.ignition_file.max-user-watches.id}",
+    "${data.ignition_file.resolv_conf.id}",
+    "${data.ignition_file.hostname.*.id[count.index]}",
   ]
 
   systemd = [
-    "${ignition_systemd_unit.etcd-member.id}",
-    "${ignition_systemd_unit.docker.id}",
-    "${ignition_systemd_unit.locksmithd.id}",
-    "${ignition_systemd_unit.kubelet-master.id}",
-    "${ignition_systemd_unit.tectonic.id}",
+    "${data.ignition_systemd_unit.etcd-member.id}",
+    "${data.ignition_systemd_unit.docker.id}",
+    "${data.ignition_systemd_unit.locksmithd.id}",
+    "${data.ignition_systemd_unit.kubelet.id}",
+    "${data.ignition_systemd_unit.bootkube.id}",
+    "${data.ignition_systemd_unit.tectonic.id}",
   ]
 }
 
-resource "ignition_config" "worker" {
-  count = "${var.worker_count}"
-
-  users = [
-    "${ignition_user.core.id}",
-  ]
-
-  files = [
-    "${ignition_file.kubeconfig.id}",
-    "${ignition_file.kubelet-env.id}",
-    "${ignition_file.max-user-watches.id}",
-    "${ignition_file.resolv_conf.id}",
-    "${ignition_file.hostname-worker.*.id[count.index]}",
-  ]
-
-  systemd = [
-    "${ignition_systemd_unit.etcd-member.id}",
-    "${ignition_systemd_unit.docker.id}",
-    "${ignition_systemd_unit.locksmithd.id}",
-    "${ignition_systemd_unit.kubelet-worker.id}",
-  ]
-}
-
-resource "ignition_file" "resolv_conf" {
+data "ignition_file" "resolv_conf" {
   path       = "/etc/resolv.conf"
   mode       = 0644
   uid        = 0
@@ -56,41 +34,36 @@ resource "ignition_file" "resolv_conf" {
   }
 }
 
-resource "ignition_user" "core" {
+data "ignition_user" "core" {
   name                = "core"
   ssh_authorized_keys = ["${var.core_public_keys}"]
 }
 
-resource "ignition_file" "hostname-master" {
-  count      = "${var.master_count}"
+data "ignition_file" "hostname" {
+  count      = "${var.instance_count}"
   path       = "/etc/hostname"
   mode       = 0644
   uid        = 0
   filesystem = "root"
 
   content {
-    content = "${var.cluster_name}-master-${count.index}"
+    content = "${var.cluster_name}-${var.hostname_infix}-${count.index}"
   }
 }
 
-resource "ignition_file" "hostname-worker" {
-  count      = "${var.worker_count}"
-  path       = "/etc/hostname"
-  mode       = 0644
-  uid        = 0
-  filesystem = "root"
-
-  content {
-    content = "${var.cluster_name}-worker-${count.index}"
-  }
-}
-
-resource "ignition_systemd_unit" "docker" {
+data "ignition_systemd_unit" "docker" {
   name   = "docker.service"
   enable = true
+
+  dropin = [
+    {
+      name    = "10-dockeropts.conf"
+      content = "[Service]\nEnvironment=\"DOCKER_OPTS=--log-opt max-size=50m --log-opt max-file=3\"\n"
+    },
+  ]
 }
 
-resource "ignition_systemd_unit" "locksmithd" {
+data "ignition_systemd_unit" "locksmithd" {
   name = "locksmithd.service"
 
   dropin = [
@@ -101,32 +74,20 @@ resource "ignition_systemd_unit" "locksmithd" {
   ]
 }
 
-data "template_file" "kubelet-master" {
-  template = "${file("${path.module}/resources/master-kubelet.service")}"
+data "template_file" "kubelet" {
+  template = "${file("${path.module}/resources/kubelet.service")}"
 
   vars {
-    cluster_dns = "${var.tectonic_kube_dns_service_ip}"
+    cluster_dns       = "${var.tectonic_kube_dns_service_ip}"
+    node_labels       = "${var.node_labels}"
+    node_taints_param = "${var.node_taints != "" ? "--register-with-taints=${var.node_taints}" : ""}"
   }
 }
 
-resource "ignition_systemd_unit" "kubelet-master" {
+data "ignition_systemd_unit" "kubelet" {
   name    = "kubelet.service"
   enable  = true
-  content = "${data.template_file.kubelet-master.rendered}"
-}
-
-data "template_file" "kubelet-worker" {
-  template = "${file("${path.module}/resources/worker-kubelet.service")}"
-
-  vars {
-    cluster_dns = "${var.tectonic_kube_dns_service_ip}"
-  }
-}
-
-resource "ignition_systemd_unit" "kubelet-worker" {
-  name    = "kubelet.service"
-  enable  = true
-  content = "${data.template_file.kubelet-worker.rendered}"
+  content = "${data.template_file.kubelet.rendered}"
 }
 
 data "template_file" "etcd-member" {
@@ -138,7 +99,7 @@ data "template_file" "etcd-member" {
   }
 }
 
-resource "ignition_systemd_unit" "etcd-member" {
+data "ignition_systemd_unit" "etcd-member" {
   name   = "etcd-member.service"
   enable = true
 
@@ -150,7 +111,7 @@ resource "ignition_systemd_unit" "etcd-member" {
   ]
 }
 
-resource "ignition_file" "kubeconfig" {
+data "ignition_file" "kubeconfig" {
   filesystem = "root"
   path       = "/etc/kubernetes/kubeconfig"
   mode       = "420"
@@ -160,20 +121,20 @@ resource "ignition_file" "kubeconfig" {
   }
 }
 
-resource "ignition_file" "kubelet-env" {
+data "ignition_file" "kubelet-env" {
   filesystem = "root"
   path       = "/etc/kubernetes/kubelet.env"
   mode       = "420"
 
   content {
     content = <<EOF
-KUBELET_ACI=${var.kube_image_url}
-KUBELET_VERSION="${var.kube_image_tag}"
+KUBELET_IMAGE_URL=${var.kube_image_url}
+KUBELET_IMAGE_TAG="${var.kube_image_tag}"
 EOF
   }
 }
 
-resource "ignition_file" "max-user-watches" {
+data "ignition_file" "max-user-watches" {
   filesystem = "root"
   path       = "/etc/sysctl.d/max-user-watches.conf"
   mode       = "420"
@@ -183,17 +144,12 @@ resource "ignition_file" "max-user-watches" {
   }
 }
 
-resource "ignition_systemd_unit" "tectonic" {
-  name   = "tectonic.service"
-  enable = true
+data "ignition_systemd_unit" "bootkube" {
+  name    = "bootkube.service"
+  content = "${var.bootkube_service}"
+}
 
-  content = <<EOF
-[Unit]
-Description=Bootstrap a Tectonic cluster
-[Service]
-Type=oneshot
-WorkingDirectory=/opt/tectonic
-ExecStart=/usr/bin/bash /opt/tectonic/bootkube.sh
-ExecStart=/usr/bin/bash /opt/tectonic/tectonic.sh kubeconfig tectonic
-EOF
+data "ignition_systemd_unit" "tectonic" {
+  name    = "tectonic.service"
+  content = "${var.tectonic_service}"
 }

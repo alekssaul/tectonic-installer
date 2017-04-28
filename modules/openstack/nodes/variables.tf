@@ -23,13 +23,9 @@ variable etcd_fqdns {
   type = "list"
 }
 
-// The amount of worker nodes to be created.
+// The amount of nodes to be created.
 // Example: `3`
-variable "master_count" {
-  type = "string"
-}
-
-variable "worker_count" {
+variable "instance_count" {
   type = "string"
 }
 
@@ -51,14 +47,22 @@ variable "tectonic_kube_dns_service_ip" {
   type = "string"
 }
 
-output "master_user_data" {
-  value = ["${ignition_config.master.*.rendered}"]
+variable "node_labels" {
+  type = "string"
 }
 
-output "worker_user_data" {
-  value = ["${ignition_config.worker.*.rendered}"]
+variable "node_taints" {
+  type = "string"
 }
 
-output "master_secgroup_name" {
-  value = "${openstack_compute_secgroup_v2.master.name}"
+variable "hostname_infix" {
+  type = "string"
+}
+
+variable "bootkube_service" {
+  type = "string"
+}
+
+variable "tectonic_service" {
+  type = "string"
 }

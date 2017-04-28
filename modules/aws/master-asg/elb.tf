@@ -2,19 +2,12 @@ resource "aws_elb" "api-internal" {
   name            = "${var.cluster_name}-api-internal"
   subnets         = ["${var.subnet_ids}"]
   internal        = true
-  security_groups = ["${aws_security_group.master_sec_group.id}"]
+  security_groups = ["${var.api_sg_ids}"]
 
   listener {
     instance_port     = 443
     instance_protocol = "tcp"
     lb_port           = 443
-    lb_protocol       = "tcp"
-  }
-
-  listener {
-    instance_port     = 10255
-    instance_protocol = "tcp"
-    lb_port           = 10255
     lb_protocol       = "tcp"
   }
 
@@ -26,15 +19,15 @@ resource "aws_elb" "api-internal" {
     interval            = 5
   }
 
-  tags {
-    Name              = "${var.cluster_name}-api-internal"
-    KubernetesCluster = "${var.cluster_name}"
-  }
+  tags = "${merge(map(
+      "Name", "${var.cluster_name}-api-internal",
+      "KubernetesCluster", "${var.cluster_name}"
+    ), var.extra_tags)}"
 }
 
 resource "aws_route53_record" "api-internal" {
   zone_id = "${var.internal_zone_id}"
-  name    = "${var.cluster_name}-k8s.${var.base_domain}"
+  name    = "${var.custom_dns_name == "" ? var.cluster_name : var.custom_dns_name}-api.${var.base_domain}"
   type    = "A"
 
   alias {
@@ -45,10 +38,11 @@ resource "aws_route53_record" "api-internal" {
 }
 
 resource "aws_elb" "api-external" {
-  name            = "${var.cluster_name}-api-external"
+  count           = "${var.public_vpc}"
+  name            = "${var.custom_dns_name == "" ? var.cluster_name : var.custom_dns_name}-api-external"
   subnets         = ["${var.subnet_ids}"]
   internal        = false
-  security_groups = ["${aws_security_group.master_sec_group.id}"]
+  security_groups = ["${var.api_sg_ids}"]
 
   listener {
     instance_port     = 22
@@ -72,15 +66,16 @@ resource "aws_elb" "api-external" {
     interval            = 5
   }
 
-  tags {
-    Name              = "${var.cluster_name}-api-external"
-    KubernetesCluster = "${var.cluster_name}"
-  }
+  tags = "${merge(map(
+      "Name", "${var.cluster_name}-api-external",
+      "KubernetesCluster", "${var.cluster_name}"
+    ), var.extra_tags)}"
 }
 
 resource "aws_route53_record" "api-external" {
+  count   = "${var.public_vpc}"
   zone_id = "${var.external_zone_id}"
-  name    = "${var.cluster_name}-k8s.${var.base_domain}"
+  name    = "${var.custom_dns_name == "" ? var.cluster_name : var.custom_dns_name}-api.${var.base_domain}"
   type    = "A"
 
   alias {
@@ -91,10 +86,10 @@ resource "aws_route53_record" "api-external" {
 }
 
 resource "aws_elb" "console" {
-  name            = "${var.cluster_name}-console"
+  name            = "${var.custom_dns_name == "" ? var.cluster_name : var.custom_dns_name}-console"
   subnets         = ["${var.subnet_ids}"]
-  internal        = false
-  security_groups = ["${aws_security_group.master_sec_group.id}"]
+  internal        = "${var.public_vpc ? false : true}"
+  security_groups = ["${var.console_sg_ids}"]
 
   listener {
     instance_port     = 32001
@@ -118,15 +113,16 @@ resource "aws_elb" "console" {
     interval            = 5
   }
 
-  tags {
-    Name              = "${var.cluster_name}-console"
-    KubernetesCluster = "${var.cluster_name}"
-  }
+  tags = "${merge(map(
+      "Name", "${var.cluster_name}-console",
+      "KubernetesCluster", "${var.cluster_name}"
+    ), var.extra_tags)}"
 }
 
 resource "aws_route53_record" "ingress-public" {
+  count   = "${var.public_vpc}"
   zone_id = "${var.external_zone_id}"
-  name    = "${var.cluster_name}.${var.base_domain}"
+  name    = "${var.custom_dns_name == "" ? var.cluster_name : var.custom_dns_name}.${var.base_domain}"
   type    = "A"
 
   alias {
@@ -138,7 +134,7 @@ resource "aws_route53_record" "ingress-public" {
 
 resource "aws_route53_record" "ingress-private" {
   zone_id = "${var.internal_zone_id}"
-  name    = "${var.cluster_name}.${var.base_domain}"
+  name    = "${var.custom_dns_name == "" ? var.cluster_name : var.custom_dns_name}.${var.base_domain}"
   type    = "A"
 
   alias {

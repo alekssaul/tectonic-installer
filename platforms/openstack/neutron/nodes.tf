@@ -1,3 +1,5 @@
+# etcd
+
 resource "openstack_compute_instance_v2" "etcd_node" {
   count           = "${var.tectonic_etcd_count}"
   name            = "${var.tectonic_cluster_name}_etcd_node_${count.index}"
@@ -10,69 +12,83 @@ resource "openstack_compute_instance_v2" "etcd_node" {
   }
 
   network {
-    uuid = "${module.network.id}"
+    uuid = "${openstack_networking_network_v2.network.id}"
   }
 
   user_data    = "${module.etcd.user_data[count.index]}"
   config_drive = false
 }
 
+# master
+
 resource "openstack_compute_instance_v2" "master_node" {
   count           = "${var.tectonic_master_count}"
   name            = "${var.tectonic_cluster_name}_master_node_${count.index}"
   image_id        = "${var.tectonic_openstack_image_id}"
   flavor_id       = "${var.tectonic_openstack_flavor_id}"
-  security_groups = ["${module.nodes.master_secgroup_name}"]
+  security_groups = ["${module.master_nodes.secgroup_name}"]
 
   metadata {
     role = "master"
   }
 
   network {
-    port = "${module.network.master_ports[count.index]}"
+    port = "${openstack_networking_port_v2.master.*.id[count.index]}"
   }
 
-  user_data    = "${module.nodes.master_user_data[count.index]}"
+  user_data    = "${module.master_nodes.user_data[count.index]}"
   config_drive = false
 }
 
 resource "openstack_compute_floatingip_associate_v2" "master" {
   count = "${var.tectonic_master_count}"
 
-  floating_ip = "${module.network.master_floating_ips[count.index]}"
+  floating_ip = "${openstack_networking_floatingip_v2.master.*.address[count.index]}"
   instance_id = "${openstack_compute_instance_v2.master_node.*.id[count.index]}"
 }
 
+# worker
+
 resource "openstack_compute_instance_v2" "worker_node" {
-  count     = "${var.tectonic_worker_count}"
-  name      = "${var.tectonic_cluster_name}_worker_node_${count.index}"
-  image_id  = "${var.tectonic_openstack_image_id}"
-  flavor_id = "${var.tectonic_openstack_flavor_id}"
+  count           = "${var.tectonic_worker_count}"
+  name            = "${var.tectonic_cluster_name}_worker_node_${count.index}"
+  image_id        = "${var.tectonic_openstack_image_id}"
+  flavor_id       = "${var.tectonic_openstack_flavor_id}"
+  security_groups = ["${module.worker_nodes.secgroup_name}"]
 
   metadata {
     role = "worker"
   }
 
   network {
-    port = "${module.network.worker_ports[count.index]}"
+    port = "${openstack_networking_port_v2.worker.*.id[count.index]}"
   }
 
-  user_data    = "${module.nodes.worker_user_data[count.index]}"
+  user_data    = "${module.worker_nodes.user_data[count.index]}"
   config_drive = false
 }
 
 resource "openstack_compute_floatingip_associate_v2" "worker" {
   count = "${var.tectonic_master_count}"
 
-  floating_ip = "${module.network.worker_floating_ips[count.index]}"
+  floating_ip = "${openstack_networking_floatingip_v2.worker.*.address[count.index]}"
   instance_id = "${openstack_compute_instance_v2.worker_node.*.id[count.index]}"
 }
 
+# tectonic assets
+
 resource "null_resource" "tectonic" {
-  depends_on = ["module.tectonic"]
+  depends_on = [
+    "module.tectonic",
+    "openstack_compute_instance_v2.master_node",
+    "openstack_networking_port_v2.master",
+    "openstack_networking_floatingip_v2.master",
+    "aws_route53_record.worker_nodes",
+    "aws_route53_record.master_nodes",
+  ]
 
   connection {
-    host        = "${module.network.master_floating_ips[0]}"
+    host        = "${openstack_networking_floatingip_v2.master.*.address[0]}"
     private_key = "${module.secrets.core_private_key_pem}"
     user        = "core"
   }

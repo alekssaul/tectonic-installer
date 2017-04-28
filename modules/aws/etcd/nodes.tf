@@ -23,17 +23,30 @@ data "aws_ami" "coreos_ami" {
 }
 
 resource "aws_instance" "etcd_node" {
-  count                  = "${length(var.external_endpoints) == 0 ? var.instance_count : 0}"
-  ami                    = "${data.aws_ami.coreos_ami.image_id}"
+  count = "${length(var.external_endpoints) == 0 ? var.instance_count : 0}"
+  ami   = "${data.aws_ami.coreos_ami.image_id}"
 
   instance_type          = "${var.ec2_type}"
   subnet_id              = "${var.subnets[count.index % var.az_count]}"
   key_name               = "${var.ssh_key}"
-  user_data              = "${ignition_config.etcd.*.rendered[count.index]}"
-  vpc_security_group_ids = ["${aws_security_group.etcd_sec_group.id}"]
+  user_data              = "${data.ignition_config.etcd.*.rendered[count.index]}"
+  vpc_security_group_ids = ["${var.sg_ids}"]
 
-  tags {
-    Name              = "${var.cluster_name}-etcd-${count.index}"
-    KubernetesCluster = "${var.cluster_name}"
+  lifecycle {
+    # Ignore changes in the AMI which force recreation of the resource. This
+    # avoids accidental deletion of nodes whenever a new CoreOS Release comes
+    # out.
+    ignore_changes = ["ami"]
+  }
+
+  tags = "${merge(map(
+      "Name", "${var.cluster_name}-etcd-${count.index}",
+      "KubernetesCluster", "${var.cluster_name}"
+    ), var.extra_tags)}"
+
+  root_block_device {
+    volume_type = "${var.root_volume_type}"
+    volume_size = "${var.root_volume_size}"
+    iops        = "${var.root_volume_iops}"
   }
 }

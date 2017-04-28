@@ -1,4 +1,4 @@
-# Troubleshooting known issues and workarounds
+# Troubleshooting Tectonic Installer
 
 ## Re-applying over a partially failed run
 
@@ -34,4 +34,22 @@ And execute this script to finish the install:
 
 ```
 $ sudo bash /opt/tectonic/tectonic.sh kubeconfig /opt/tectonic/tectonic
+```
+
+## Missing Terraform modules
+
+If you see errors about missing modules:
+
+```
+Error configuring: 2 error(s) occurred:
+
+* module.bootkube: provider localfile couldn't be found
+* module.tectonic: provider localfile couldn't be found
+```
+
+These errors indicate that you are not using the customized Terraform binary bundled with the project. You can check this:
+
+```
+$ which terraform
+/Users/coreos/tectonic-installer/bin/terraform/terraform
 ```

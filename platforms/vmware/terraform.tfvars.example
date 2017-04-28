@@ -1,0 +1,96 @@
+tectonic_base_domain = "foo.bar" # DNS Zone of Tectonic Cluster
+tectonic_cluster_name = "foobar" # Cluster Name
+
+tectonic_admin_email = "admin@example.com" # Initial Administrator email address 
+tectonic_admin_password_hash = "$2a$12$k9wa31uE/4uD9aVtT/vNtOZwxXyEJ/9DwXXEYB/eUpb9fvEPsH/kO" # Welcome1
+
+tectonic_master_count = 2 # Number of Master Nodes
+tectonic_worker_count = 2 # Number of Worker Nodes
+tectonic_etcd_count = 3 # Number of etcd nodes
+
+tectonic_service_cidr = "10.3.0.0/24" # Service CIDR
+tectonic_cluster_cidr = "10.2.0.0/16" # Container/POD Network CIDR
+tectonic_kube_dns_service_ip = "10.3.0.10" # Kube-DNS IP Address, must be within Service CIDR range
+tectonic_kube_apiserver_service_ip = "10.3.0.1" # Kubernetes API internal IP, must be within Service CIDR range
+
+tectonic_ca_key_alg = "RSA"
+tectonic_ca_cert = ""
+tectonic_ca_key = ""
+
+tectonic_license_path = "./license" # path to Tectonic License file
+tectonic_pull_secret_path = "./pull_secret" # path to Tectonic Pull Secret
+
+tectonic_etcd_servers = [] # ETCD endpoints if you are bringing your own etcd cluster
+
+tectonic_vmware_cluster = "cluster01" # vSphere Cluster Name
+tectonic_vmware_datacenter = "nyc" # vSphere Virtual DataCenter
+tectonic_vmware_datastore = "datastore2" # Datastore to be used
+tectonic_vmware_network = "VM Network" # Portgroup name to attach to
+tectonic_vmware_vm_template = "coreos_production_vmware_ova" # CoreOS Container Linux template
+tectonic_vmware_vm_template_folder = "/nyc/vm/templates" # CoreOS Container Linux template folder
+
+tectonic_vmware_username = "Administrator@vsphere.local"
+tectonic_vmware_password = "VMware123!"
+tectonic_vmware_server = "192.168.246.20"
+tectonic_vmware_sslselfsigned = true
+tectonic_vmware_folder = "vsphere"
+tectonic_license_path = "tectonic-license.txt" # path to Tectonic License file
+tectonic_pull_secret_path = "config.json" # path to Tectonic Pull Secret
+
+tectonic_etcd_servers = [] # ETCD endpoints if you are bringing your own etcd cluster
+
+# VMware Connectivity
+tectonic_vmware_username = "Administrator@vsphere.local" 
+tectonic_vmware_password = "VMware123!"
+tectonic_vmware_server = "192.168.246.20"
+tectonic_vmware_sslselfsigned = true
+
+tectonic_vmware_datacenter = "nyc" # vSphere Virtual DataCenter
+tectonic_vmware_cluster = "cluster01" # vSphere Cluster Name
+tectonic_vmware_datastore = "datastore2" # Datastore to be used
+tectonic_vmware_network = "VM Network" # Portgroup name to attach to
+tectonic_vmware_vm_template = "coreos_production_vmware_ova" # CoreOS Container Linux template
+# CoreOS Container Linux template folder. This typically follows; /Datacenter/vm/$Foldername syntax
+tectonic_vmware_vm_template_folder = "/nyc/vm/templates"
+tectonic_vmware_folder = "vsphere"	# resources will be created in this folder
+>>>>>>> Update documentation, change the order of variables in tfvars.example, use etcd FQDN names for proxy service settings
+
+
+tectonic_vmware_vm_etcd_hostnames = {
+  "0" = "vsphere-etcd0"
+  "1" = "vsphere-etcd1"
+  "2" = "vsphere-etcd2"
+}
+tectonic_vmware_vm_etcdips = {
+  "0" = "192.168.246.10/24"
+  "1" = "192.168.246.11/24"
+  "2" = "192.168.246.12/24"
+}
+tectonic_vmware_vm_etcdgateway = "192.168.246.1"
+
+tectonic_vmware_vm_master_hostnames = {
+  "0" = "vsphere-master0"
+  "1" = "vsphere-master1"
+}
+tectonic_vmware_vm_masterips = {
+  "0" = "192.168.246.20/24"
+  "1" = "192.168.246.21/24"
+}
+tectonic_vmware_vm_mastergateway = "192.168.246.1"
+
+tectonic_vmware_vm_worker_hostnames = {
+  "0" = "vsphere-worker0"
+  "1" = "vsphere-worker1"
+}
+tectonic_vmware_vm_workerips = {
+  "0" = "192.168.246.30/24"
+  "1" = "192.168.246.31/24"
+}
+tectonic_vmware_vm_workergateway = "192.168.246.1"
+
+tectonic_vmware_vm_dns = "192.168.246.100"
+tectonic_vmware_httpproxy = ""
+tectonic_vmware_httpsproxy = ""
+
+tectonic_vmware_tectonicaddress = "tectonic"
+tectonic_vmware_apiaddress = "tectonic-api"
