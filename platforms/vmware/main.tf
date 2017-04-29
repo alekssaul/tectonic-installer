@@ -36,6 +36,7 @@ module "etcd" {
   http_proxy              = "${var.tectonic_vmware_httpproxy}"
   https_proxy              = "${var.tectonic_vmware_httpsproxy}"
   no_proxy                = "${var.tectonic_vmware_noproxy}"
+  container_registry_certificate           = "${file("internal-registry.pem")}"
 
 }
 
@@ -72,8 +73,11 @@ module "masters" {
   http_proxy              = "${var.tectonic_vmware_httpproxy}"
   https_proxy              = "${var.tectonic_vmware_httpsproxy}"
   no_proxy                = "${var.tectonic_vmware_noproxy}"
+  container_registry_certificate           = "${file("internal-registry.pem")}"
+  container_images = "${var.tectonic_container_images}"
 
   core_public_keys = ["${module.secrets.core_public_key_openssh}"]
+  etcd_image         = "${var.tectonic_container_images["etcd"]}"
 }
 
 module "workers" {
@@ -110,6 +114,9 @@ module "workers" {
   http_proxy              = "${var.tectonic_vmware_httpproxy}"
   https_proxy              = "${var.tectonic_vmware_httpsproxy}"
   no_proxy                = "${var.tectonic_vmware_noproxy}"
+  etcd_image         = "${var.tectonic_container_images["etcd"]}"
+  container_registry_certificate           = "${file("internal-registry.pem")}"
+    container_images = "${var.tectonic_container_images}"
 }
 
 data "null_data_source" "local" {

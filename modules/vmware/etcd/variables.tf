@@ -107,3 +107,9 @@ variable "no_proxy" {
   description = "NO_Proxy variable"
   default = ""
 }
+
+variable "container_registry_certificate" {
+  type = "string"
+  description = "Custom Certificate of the registry"
+  default = ""
+}

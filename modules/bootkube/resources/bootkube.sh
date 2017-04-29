@@ -4,6 +4,7 @@
   --trust-keys-from-https \
   --volume assets,kind=host,source=$(pwd) \
   --mount volume=assets,target=/assets \
+  --insecure-options=image \
   ${bootkube_image} \
   --net=host \
   --dns=host \

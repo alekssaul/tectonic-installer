@@ -27,6 +27,8 @@ variable "tectonic_container_images" {
     flannel                   = "quay.io/coreos/flannel:v0.7.0-amd64"
     etcd                      = "quay.io/coreos/etcd:v3.1.2"
     awscli                    = "quay.io/coreos/awscli:025a357f05242fdad6a81e8a6b520098aa65a600"
+    pause                     = "gcr.io/google_containers/pause-amd64:3.0"
+    busybox                   = "busybox"
   }
 }
 
@@ -120,7 +122,7 @@ variable "tectonic_cl_channel" {
 
 variable "tectonic_update_server" {
   type        = "string"
-  default     = "https://tectonic.update.core-os.net"
+  default     = "https://public.update.core-os.net"
   description = "The URL of the Tectonic Omaha update server"
 }
 

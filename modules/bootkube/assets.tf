@@ -11,6 +11,7 @@ resource "template_folder" "bootkube" {
     dnsmasq_metrics_image = "${var.container_images["dnsmasq_metrics"]}"
     exechealthz_image     = "${var.container_images["exechealthz"]}"
     flannel_image         = "${var.container_images["flannel"]}"
+    busybox_image         = "${var.container_images["busybox"]}"
 
     etcd_servers = "${join(",", var.etcd_servers)}"
     cloud_provider = "${var.cloud_provider}"
@@ -56,7 +57,7 @@ data "template_file" "bootkube" {
   template = "${file("${path.module}/resources/bootkube.sh")}"
 
   vars {
-    bootkube_image = "${var.container_images["bootkube"]}"
+    bootkube_image = "docker://${var.container_images["bootkube"]}"
     etcd_server = "${element(var.etcd_servers, 0)}"
   }
 }

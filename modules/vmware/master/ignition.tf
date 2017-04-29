@@ -13,6 +13,7 @@ resource "ignition_config" "master" {
     "${ignition_file.hostname-master.*.id[count.index]}",
     "${ignition_file.profile-env.id}",
     "${ignition_file.default-env.id}",
+    "${ignition_file.registry-certificate.id}",
   ]
 
   systemd = [
@@ -21,6 +22,7 @@ resource "ignition_config" "master" {
     "${ignition_systemd_unit.locksmithd.id}",
     "${ignition_systemd_unit.kubelet-master.id}",
     "${ignition_systemd_unit.tectonic.id}",
+    "${ignition_systemd_unit.update_ca_certs.id}",
   ]
 
   networkd = [
@@ -144,6 +146,7 @@ data "template_file" "kubelet-master" {
 
   vars {
     cluster_dns = "${var.tectonic_kube_dns_service_ip}"
+    pause_container = "${var.container_images["pause"]}"
   }
 }
 
@@ -157,8 +160,9 @@ data "template_file" "etcd-member" {
   template = "${file("${path.module}/resources/etcd-member.service")}"
 
   vars {
-    version   = "${var.tectonic_versions["etcd"]}"
+    etcd_image = "${var.etcd_image}"
     endpoints = "${join(",", formatlist("%s:2379", var.etcd_fqdns))}"
+
   }
 }
 
@@ -191,7 +195,7 @@ resource "ignition_file" "kubelet-env" {
 
   content {
     content = <<EOF
-KUBELET_ACI=${var.kube_image_url}
+KUBELET_ACI=docker://${var.kube_image_url}
 KUBELET_VERSION="${var.kube_image_tag}"
 EOF
   }
@@ -245,4 +249,32 @@ ExecStart=/usr/bin/bash /opt/tectonic/tectonic.sh kubeconfig tectonic
 EOF
 }
 
+resource "ignition_file" "registry-certificate" { 
+  path       = "/etc/ssl/certs/internal-registry.pem" 
+  mode     = 0644 
+  uid        = 0  
+  filesystem = "root" 
+ 
+  content { 
+    content = "${var.container_registry_certificate}" 
+  } 
+} 
+
+resource "ignition_systemd_unit" "update_ca_certs" {
+  name   = "updateca.service"
+  enable = true
+
+  content = <<EOF
+[Unit]
+Description=Run update ca certs
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/update-ca-certificates
+
+[Install]
+WantedBy=multi-user.target
+EOF
+}
+ 
 

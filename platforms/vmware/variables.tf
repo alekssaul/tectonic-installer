@@ -184,3 +184,9 @@ variable "tectonic_vmware_noproxy" {
   description = "no_proxy variable, defaults to 127.0.0.1,localhost,.$cluster.domain"
   default = ""
 }
+
+variable "tectonic_vmware_registry_certificate" {
+  type = "string"
+  description = "Custom Certificate of the registry"
+  default = ""
+}

@@ -13,6 +13,7 @@ resource "ignition_config" "worker" {
     "${ignition_file.hostname-worker.*.id[count.index]}",
     "${ignition_file.profile-env.id}",
     "${ignition_file.default-env.id}",
+    "${ignition_file.registry-certificate.id}", 
   ]
 
   systemd = [
@@ -21,10 +22,11 @@ resource "ignition_config" "worker" {
     "${ignition_systemd_unit.locksmithd.id}",
     "${ignition_systemd_unit.kubelet-worker.id}",
     "${ignition_systemd_unit.vmtoolsd_member.id}",
+    "${ignition_systemd_unit.update_ca_certs.id}",
   ]
 
   networkd = [
-  "${ignition_networkd_unit.vmnetwork.*.id[count.index]}",
+    "${ignition_networkd_unit.vmnetwork.*.id[count.index]}",
   ]
 }
 
@@ -96,6 +98,7 @@ data "template_file" "kubelet-worker" {
 
   vars {
     cluster_dns = "${var.tectonic_kube_dns_service_ip}"
+    pause_container = "${var.container_images["pause"]}"
   }
 }
 
@@ -109,8 +112,8 @@ data "template_file" "etcd-member" {
   template = "${file("${path.module}/resources/etcd-member.service")}"
 
   vars {
-    version   = "${var.tectonic_versions["etcd"]}"
     endpoints = "${join(",", formatlist("%s:2379", var.etcd_fqdns))}"
+    etcd_image = "${var.etcd_image}"
   }
 }
 
@@ -191,7 +194,7 @@ resource "ignition_file" "kubelet-env" {
 
   content {
     content = <<EOF
-KUBELET_ACI=${var.kube_image_url}
+KUBELET_ACI=docker://${var.kube_image_url}
 KUBELET_VERSION="${var.kube_image_tag}"
 EOF
   }
@@ -242,5 +245,33 @@ Type=oneshot
 WorkingDirectory=/opt/tectonic
 ExecStart=/usr/bin/bash /opt/tectonic/bootkube.sh
 ExecStart=/usr/bin/bash /opt/tectonic/tectonic.sh kubeconfig tectonic
+EOF
+}
+
+resource "ignition_file" "registry-certificate" { 
+  path       = "/etc/ssl/certs/internal-registry.pem" 
+  mode     = 0644 
+  uid        = 0  
+  filesystem = "root" 
+ 
+  content { 
+    content = "${var.container_registry_certificate}" 
+  } 
+} 
+
+resource "ignition_systemd_unit" "update_ca_certs" {
+  name   = "updateca.service"
+  enable = true
+
+  content = <<EOF
+[Unit]
+Description=Run update ca certs
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/update-ca-certificates
+
+[Install]
+WantedBy=multi-user.target
 EOF
 }
