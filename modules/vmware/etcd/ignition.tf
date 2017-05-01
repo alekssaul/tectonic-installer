@@ -7,8 +7,8 @@ resource "ignition_config" "etcd" {
 
   files = [
     "${ignition_file.hostname-etcd.*.id[count.index]}",
-    "${ignition_file.profile-env.id}",
-    "${ignition_file.default-env.id}",
+    "${ignition_file.profile-env.*.id[count.index]}",
+    "${ignition_file.default-env.*.id[count.index]}",
     "${ignition_file.registry-certificate.id}",
   ]
 
@@ -24,6 +24,7 @@ resource "ignition_config" "etcd" {
 }
 
 resource "ignition_file" "profile-env" {
+  count      = "${length(var.enableproxy) == 0 ? var.count : 0 }"
   path       = "/etc/profile.env"
   mode       = 0644
   uid        = 0
@@ -39,6 +40,7 @@ EOF
 }
 
 resource "ignition_file" "default-env" {
+  count      = "${length(var.enableproxy) == 0 ? var.count : 0 }"
   path       = "/etc/systemd/system.conf.d/10-default-env.conf"
   mode       = 0644
   uid        = 0

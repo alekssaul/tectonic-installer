@@ -165,3 +165,9 @@ variable "container_images" {
     description = "Container images to use"
     type = "map"
 }
+
+variable "enableproxy" {
+  type = "string"
+  description = "Flag to Enable Proxy settings"
+  default = ""
+}

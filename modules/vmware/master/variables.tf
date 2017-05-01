@@ -162,6 +162,12 @@ variable "etcd_image" {
   type = "string"
 }
 
+variable "enableproxy" {
+  type = "string"
+  description = "Flag to Enable Proxy settings"
+  default = ""
+}
+
 variable "container_images" {
     description = "Container images to use"
     type = "map"

@@ -167,6 +167,13 @@ EOF
   description   = "DNS Server for the infrastructure"
 }
 
+variable "tectonic_vmware_proxy" {
+  type = "string"
+  description = "Enable Proxy settings"
+  default = ""
+}
+
+
 variable "tectonic_vmware_httpproxy" {
   type = "string"
   description = "HTTP Proxy variable"

@@ -90,6 +90,12 @@ variable hostname {
   description = "Hostname of the node"
 }
 
+variable "enableproxy" {
+  type = "string"
+  description = "Flag to Enable Proxy settings"
+  default = ""
+}
+
 variable "http_proxy" {
   type = "string"
   description = "HTTP Proxy variable"

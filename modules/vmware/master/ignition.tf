@@ -11,8 +11,8 @@ resource "ignition_config" "master" {
     "${ignition_file.max-user-watches.id}",
     "${ignition_file.cloudprovider.id}",
     "${ignition_file.hostname-master.*.id[count.index]}",
-    "${ignition_file.profile-env.id}",
-    "${ignition_file.default-env.id}",
+    "${ignition_file.profile-env.*.id[count.index]}",
+    "${ignition_file.default-env.*.id[count.index]}",
     "${ignition_file.registry-certificate.id}",
   ]
 
@@ -47,6 +47,7 @@ resource "null_resource" "noproxy" {
 }
 
 resource "ignition_file" "profile-env" {
+  count      = "${length(var.enableproxy) == 0 ? var.count : 0 }"
   path       = "/etc/profile.env"
   mode       = 0644
   uid        = 0
@@ -68,6 +69,7 @@ data "template_file" "default-env" {
 }
 
 resource "ignition_file" "default-env" {
+  count      = "${length(var.enableproxy) == 0 ? var.count : 0 }"
   path       = "/etc/systemd/system.conf.d/10-default-env.conf"
   mode       = 0644
   uid        = 0

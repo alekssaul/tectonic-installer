@@ -156,6 +156,7 @@ resource "null_resource" "noproxy" {
 }
 
 resource "ignition_file" "profile-env" {
+  count      = "${length(var.enableproxy) == 0 ? var.count : 0 }"
   path       = "/etc/profile.env"
   mode       = 0644
   uid        = 0
@@ -177,6 +178,7 @@ data "template_file" "default-env" {
 }
 
 resource "ignition_file" "default-env" {
+  count      = "${length(var.enableproxy) == 0 ? var.count : 0 }"
   path       = "/etc/systemd/system.conf.d/10-default-env.conf"
   mode       = 0644
   uid        = 0
