@@ -29,6 +29,8 @@ variable "tectonic_container_images" {
     awscli                    = "quay.io/coreos/awscli:025a357f05242fdad6a81e8a6b520098aa65a600"
     pause                     = "gcr.io/google_containers/pause-amd64:3.0"
     busybox                   = "busybox"
+    pod-checkpointer          = "quay.io/coreos/pod-checkpointer:5b585a2d731173713fa6871c436f6c53fa17f754"
+    prometheus                = "quay.io/prometheus/prometheus:v1.5.2"
   }
 }
 
