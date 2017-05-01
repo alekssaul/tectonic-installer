@@ -62,3 +62,9 @@ variable "oidc_groups_claim" {
     description = "The OpenID claim to use for specifying user groups (string or array of strings)"
     type        = "string"
 }
+
+variable "cloud-config" {
+    description = "Cloud Config to use"
+    type = "string"
+    default = "--cloud-config=/etc/kubernetes/vsphere.conf"
+}

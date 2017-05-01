@@ -172,3 +172,9 @@ variable "container_images" {
     description = "Container images to use"
     type = "map"
 }
+
+variable "cloud-config" {
+    description = "Cloud Config to use"
+    type = "string"
+    default = "--cloud-config=/etc/kubernetes/vsphere.conf"
+}

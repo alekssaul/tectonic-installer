@@ -1,5 +1,6 @@
 # Cloud Provider Overrides for VMware
 resource "template_folder" "cloudprovider" {
+  count      = "${length(var.cloud-config) == 0 ? 0 : 1 }"
   input_path = "${path.module}/resources/manifests"
   output_path = "${path.cwd}/generated/cloudprovider"
 

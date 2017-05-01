@@ -171,3 +171,9 @@ variable "enableproxy" {
   description = "Flag to Enable Proxy settings"
   default = ""
 }
+
+variable "cloud-config" {
+    description = "Cloud Config to use"
+    type = "string"
+    default = "--cloud-config=/etc/kubernetes/vsphere.conf"
+}

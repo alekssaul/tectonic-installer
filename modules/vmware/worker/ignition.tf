@@ -99,6 +99,7 @@ data "template_file" "kubelet-worker" {
   vars {
     cluster_dns = "${var.tectonic_kube_dns_service_ip}"
     pause_container = "${var.container_images["pause"]}"
+    cloud-config = "${var.cloud-config}"
   }
 }
 
@@ -213,6 +214,7 @@ resource "ignition_file" "max-user-watches" {
 }
 
 resource "ignition_file" "cloudprovider" {
+  #count      = "${length(var.cloud-config) == 0 ? var.count : 0 }"
   path       = "/etc/kubernetes/vsphere.conf"
   mode       = 0600
   uid        = 0

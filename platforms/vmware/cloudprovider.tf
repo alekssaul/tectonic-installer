@@ -1,6 +1,6 @@
 module "cloudprovider" {
   source         = "../../modules/vmware/cloudprovider"
-
+  cloud-config   = "${var.tectonic_vmware_cloudprovider}"
   cloud_provider = "vsphere"
   kube_apiserver_url = "https://${var.tectonic_cluster_name}-k8s.${var.tectonic_base_domain}:443"
   oidc_issuer_url    = "https://${var.tectonic_vmware_tectonicaddress}.${var.tectonic_base_domain}:443/identity"

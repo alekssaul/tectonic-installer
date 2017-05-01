@@ -80,6 +80,7 @@ module "masters" {
   core_public_keys        = ["${module.secrets.core_public_key_openssh}"]
   etcd_image              = "${var.tectonic_container_images["etcd"]}"
   enableproxy            = "${var.tectonic_vmware_proxy}"
+  cloud-config            = "${var.tectonic_vmware_cloudprovider}"
 
 }
 
@@ -121,6 +122,7 @@ module "workers" {
   container_registry_certificate           = "${file("internal-registry.pem")}"
   container_images = "${var.tectonic_container_images}"
   enableproxy    = "${var.tectonic_vmware_proxy}"
+  cloud-config            = "${var.tectonic_vmware_cloudprovider}"
 }
 
 data "null_data_source" "local" {
