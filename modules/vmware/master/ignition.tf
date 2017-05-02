@@ -14,6 +14,7 @@ resource "ignition_config" "master" {
     "${ignition_file.profile-env.*.id[count.index]}",
     "${ignition_file.default-env.*.id[count.index]}",
     "${ignition_file.registry-certificate.id}",
+    "${ignition_file.dockerpull.id}",
   ]
 
   systemd = [
@@ -23,6 +24,8 @@ resource "ignition_config" "master" {
     "${ignition_systemd_unit.kubelet-master.id}",
     "${ignition_systemd_unit.tectonic.id}",
     "${ignition_systemd_unit.update_ca_certs.id}",
+    "${ignition_systemd_unit.docker_seed_pod-checkpointer.id}",
+    "${ignition_systemd_unit.docker_seed_prometheus.id}",
   ]
 
   networkd = [
@@ -280,5 +283,63 @@ ExecStart=/usr/sbin/update-ca-certificates
 WantedBy=multi-user.target
 EOF
 }
- 
 
+resource "ignition_file" "dockerpull" {
+  path       = "/root/docker_pull.sh"
+  mode       = 0700
+  uid        = 0
+  filesystem = "root"
+
+  content {
+    content = <<EOF
+#!/bin/sh
+sleep 60
+/usr/bin/docker pull $imagetopull
+dockerimageid=$(/usr/bin/docker images $imagetopull --format "{{.ID}}") 
+/usr/bin/docker tag $dockerimageid $imagetotag
+
+EOF
+  }
+}
+
+resource "ignition_systemd_unit" "docker_seed_pod-checkpointer" {
+  name   = "seed-pod-checkpointer.service"
+  enable = true
+
+  content = <<EOF
+[Unit]
+Description=Seed Pod Checkpointer
+Requires=docker.service,updateca.service
+After=docker.service,updateca.service
+
+[Service]
+Type=oneshot
+Environment=imagetopull=${var.container_images["pod-checkpointer"]}
+Environment=imagetotag=quay.io/coreos/pod-checkpointer:5b585a2d731173713fa6871c436f6c53fa17f754
+ExecStart=/usr/bin/bash /root/docker_pull.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+}
+
+resource "ignition_systemd_unit" "docker_seed_prometheus" {
+  name   = "seed-prometheus.service"
+  enable = true
+
+  content = <<EOF
+[Unit]
+Description=Seed Pod Checkpointer
+Requires=docker.service,updateca.service
+After=docker.service,updateca.service
+
+[Service]
+Type=oneshot
+Environment=imagetopull=${var.container_images["prometheus"]}
+Environment=imagetotag=quay.io/prometheus/prometheus:v1.5.2
+ExecStart=/usr/bin/bash /root/docker_pull.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+}

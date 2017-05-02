@@ -194,12 +194,12 @@ variable "tectonic_vmware_registry_certificate" {
 variable "tectonic_vmware_cloudprovider" {
   type = "string"
   description = "Cloud Config to use"
-  #default = "--cloud-config=/etc/kubernetes/vsphere.conf"
-  default = ""
+  default = "--cloud-config=/etc/kubernetes/vsphere.conf"
+  #default = ""
 }
 
 variable "tectonic_vmware_proxy" {
   type = "string"
   description = "Enable Proxy settings"
-  default = "false"
+  default = ""
 }
