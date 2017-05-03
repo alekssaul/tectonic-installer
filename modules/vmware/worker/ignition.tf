@@ -11,8 +11,8 @@ resource "ignition_config" "worker" {
     "${ignition_file.max-user-watches.id}",
     "${ignition_file.cloudprovider.id}",
     "${ignition_file.hostname-worker.*.id[count.index]}",
-    "${ignition_file.profile-env.id}",
-    "${ignition_file.default-env.id}",
+    "${ignition_file.profile-env.*.id[count.index]}",
+    "${ignition_file.default-env.*.id[count.index]}",
     "${ignition_file.registry-certificate.id}", 
     "${ignition_file.dockerpull.id}",
   ]
