@@ -158,6 +158,12 @@ variable "container_registry_certificate" {
   default = "" 
 }
 
+variable "insecure-registry" { 
+  type = "string" 
+  description = "insecure_registry" 
+  default = "" 
+}
+
 variable "etcd_image" {
   type = "string"
 }

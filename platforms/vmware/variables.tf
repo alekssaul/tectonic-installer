@@ -203,3 +203,9 @@ variable "tectonic_vmware_proxy" {
   description = "Enable Proxy settings"
   default = ""
 }
+
+variable "tectonic_vmware_insecureregistry" {
+  type = "string"
+  description = "Insecure Registry flag"
+
+}

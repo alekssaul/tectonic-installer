@@ -177,3 +177,9 @@ variable "cloud-config" {
     type = "string"
     default = "--cloud-config=/etc/kubernetes/vsphere.conf"
 }
+
+variable "insecure-registry" { 
+  type = "string" 
+  description = "insecure_registry" 
+  default = "" 
+}

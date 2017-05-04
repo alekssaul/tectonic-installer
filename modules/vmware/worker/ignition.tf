@@ -80,11 +80,6 @@ resource "ignition_file" "hostname-worker" {
   }
 }
 
-resource "ignition_systemd_unit" "docker" {
-  name   = "docker.service"
-  enable = true
-}
-
 resource "ignition_systemd_unit" "locksmithd" {
   name = "locksmithd.service"
 
@@ -93,6 +88,17 @@ resource "ignition_systemd_unit" "locksmithd" {
       name    = "40-etcd-lock.conf"
       content = "[Service]\nEnvironment=REBOOT_STRATEGY=etcd-lock\n"
     },
+  ]
+}
+
+resource "ignition_systemd_unit" "docker" {
+  name   = "docker.service"
+  enable = true
+  dropin = [
+  {
+    name =  "50-insecure-registry.conf"
+    content =  "[Service]\nEnvironment=DOCKER_OPTS=--insecure-registry=${var.insecure-registry}\n"
+  },
   ]
 }
 

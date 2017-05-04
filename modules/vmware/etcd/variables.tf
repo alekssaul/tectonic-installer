@@ -119,3 +119,9 @@ variable "container_registry_certificate" {
   description = "Custom Certificate of the registry"
   default = ""
 }
+
+variable "insecure-registry" { 
+  type = "string" 
+  description = "insecure_registry" 
+  default = "" 
+}

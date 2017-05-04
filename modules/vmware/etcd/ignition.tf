@@ -16,10 +16,22 @@ resource "ignition_config" "etcd" {
     "${ignition_systemd_unit.etcd3.*.id[count.index]}",
     "${ignition_systemd_unit.vmtoolsd_member.id}",
     "${ignition_systemd_unit.update_ca_certs.id}",
+     "${ignition_systemd_unit.docker.id}",
   ]
 
   networkd = [
     "${ignition_networkd_unit.vmnetwork.*.id[count.index]}",
+  ]
+}
+
+resource "ignition_systemd_unit" "docker" {
+  name   = "docker.service"
+  enable = true
+  dropin = [
+  {
+    name =  "50-insecure-registry.conf"
+    content =  "[Service]\nEnvironment=DOCKER_OPTS=--insecure-registry=${var.insecure-registry}\n"
+  },
   ]
 }
 

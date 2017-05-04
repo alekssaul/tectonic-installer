@@ -33,6 +33,17 @@ resource "ignition_config" "master" {
   ]
 }
 
+resource "ignition_systemd_unit" "docker" {
+  name   = "docker.service"
+  enable = true
+  dropin = [
+  {
+    name =  "50-insecure-registry.conf"
+    content =  "[Service]\nEnvironment=DOCKER_OPTS=--insecure-registry=${var.insecure-registry}\n"
+  },
+  ]
+}
+
 data "template_file" "profile-env" {
   template = "${file("${path.module}/resources/profile.env")}"
 
@@ -128,11 +139,6 @@ resource "ignition_file" "hostname-master" {
   content {
     content = "${var.hostname["${count.index}"]}"
   }
-}
-
-resource "ignition_systemd_unit" "docker" {
-  name   = "docker.service"
-  enable = true
 }
 
 resource "ignition_systemd_unit" "locksmithd" {

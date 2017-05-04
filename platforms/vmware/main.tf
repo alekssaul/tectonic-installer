@@ -38,7 +38,7 @@ module "etcd" {
   no_proxy                = "${var.tectonic_vmware_noproxy}"
   container_registry_certificate           = "${file("internal-registry.pem")}"
   enableproxy            = "${var.tectonic_vmware_proxy}"
-
+  insecure-registry      = "${var.tectonic_vmware_insecureregistry}"
 }
 
 module "masters" {
@@ -81,6 +81,7 @@ module "masters" {
   etcd_image              = "${var.tectonic_container_images["etcd"]}"
   enableproxy            = "${var.tectonic_vmware_proxy}"
   cloud-config            = "${var.tectonic_vmware_cloudprovider}"
+  insecure-registry      = "${var.tectonic_vmware_insecureregistry}"
 
 }
 
@@ -123,6 +124,7 @@ module "workers" {
   container_images = "${var.tectonic_container_images}"
   enableproxy    = "${var.tectonic_vmware_proxy}"
   cloud-config            = "${var.tectonic_vmware_cloudprovider}"
+  insecure-registry      = "${var.tectonic_vmware_insecureregistry}"
 }
 
 data "null_data_source" "local" {
