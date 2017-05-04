@@ -95,7 +95,7 @@ resource "ignition_systemd_unit" "etcd3" {
       content = <<EOF
 [Service]
 Environment="ETCD_IMAGE=docker://${var.container_image}"
-Environment="RKT_RUN_ARGS=--uuid-file-save=/var/lib/coreos/etcd-member-wrapper.uuid --insecure-options=image"
+Environment="RKT_RUN_ARGS=--uuid-file-save=/var/lib/coreos/etcd-member-wrapper.uuid --insecure-options=all"
 ExecStart=
 ExecStart=/usr/lib/coreos/etcd-wrapper \
   --name=${var.hostname["${count.index}"]} \
