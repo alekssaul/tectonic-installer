@@ -13,6 +13,16 @@ Generally, the VMware platform templates adhere to the standards defined by the 
 1. Pre-Allocated IP addresses for the cluster and pre-create DNS records
 1. Register for Tectonic [Account][account]
 
+## Adding SSH Key to Agent
+
+You need to add your SSH key to agent for tectonic_ssh_authorized_key used within terraform.tfvars.  Otherwise, during the terraform apply command you'll hit ssh authentication error that look like this:
+
+```* ssh: handshake failed: ssh: unable to authenticate, attempted methods [none], no supported methods remain```
+
+This is shell command to run if you are using the stand id_rsa key:
+
+```$ ssh-add -K ~/.ssh/id_rsa```
+
 ## DNS and IP address allocation
 
 Prior to the start of setup create required DNS records. Below is a sample table of 3 etcd nodes, 2 master nodes and 2 worker nodes. 
@@ -103,4 +113,3 @@ $ terraform destroy ../../platforms/vmware
 [generic]: ../../generic-platform.md
 [downloadterraform]: https://www.terraform.io/downloads.html
 [vmware]: ../../variables/vmware.md
-[vars]: ../../variables/config.md
