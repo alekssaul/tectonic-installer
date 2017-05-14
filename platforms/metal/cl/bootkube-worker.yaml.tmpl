@@ -1,4 +1,14 @@
 ---
+networkd:
+  units:
+    - name: 00-{{.coreos_network_adapter}}.network
+      contents: |
+        [Match]
+        Name={{.coreos_network_adapter}}
+        [Network]
+        DNS={{.coreos_network_dns}}
+        Address={{.coreos_network_address}}
+        Gateway={{.coreos_network_gateway}}
 systemd:
   units:
     - name: docker.service
