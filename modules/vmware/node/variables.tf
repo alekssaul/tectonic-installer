@@ -124,3 +124,18 @@ variable "kubeconfig" {
   type        = "string"
   description = "Contents of Kubeconfig"
 }
+
+variable "http_proxy" {
+  type        = "string"
+  description = "http_proxy variable for Nodes"
+}
+
+variable "no_proxy" {
+  type        = "string"
+  description = "no_proxy variable for Nodes"
+}
+
+variable "https_proxy" {
+  type        = "string"
+  description = "https_proxy variable for Nodes"
+}

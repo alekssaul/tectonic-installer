@@ -22,6 +22,10 @@ module "etcd" {
   vm_disk_template        = "${var.tectonic_vmware_vm_template}"
   vm_disk_template_folder = "${var.tectonic_vmware_vm_template_folder}"
   vmware_folder           = "${vsphere_folder.tectonic_vsphere_folder.path}"
+  http_proxy           =  "${var.tectonic_vmware_httpproxy}"
+  https_proxy           =  "${var.tectonic_vmware_httpsproxy}"
+  no_proxy           =  "${var.tectonic_vmware_noproxy}"
+
 }
 
 module "masters" {
@@ -54,6 +58,10 @@ module "masters" {
   vm_disk_template_folder = "${var.tectonic_vmware_vm_template_folder}"
   vmware_folder           = "${vsphere_folder.tectonic_vsphere_folder.path}"
   kubeconfig              = "${module.bootkube.kubeconfig}"
+  http_proxy           =  "${var.tectonic_vmware_httpproxy}"
+  https_proxy           =  "${var.tectonic_vmware_httpsproxy}"
+  no_proxy           =  "${var.tectonic_vmware_noproxy}"
+
 }
 
 module "workers" {
@@ -85,4 +93,8 @@ module "workers" {
   vm_disk_template_folder = "${var.tectonic_vmware_vm_template_folder}"
   vmware_folder           = "${vsphere_folder.tectonic_vsphere_folder.path}"
   kubeconfig              = "${module.bootkube.kubeconfig}"
+  http_proxy           =  "${var.tectonic_vmware_httpproxy}"
+  https_proxy           =  "${var.tectonic_vmware_httpsproxy}"
+  no_proxy           =  "${var.tectonic_vmware_noproxy}"
+
 }
