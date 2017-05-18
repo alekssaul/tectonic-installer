@@ -76,6 +76,11 @@ module "etcd" {
   root_volume_iops = "${var.tectonic_aws_etcd_root_volume_iops}"
 
   dns_enabled = "${!var.tectonic_experimental && length(compact(var.tectonic_etcd_servers)) == 0}"
+  tls_enabled = "${var.tectonic_etcd_tls_enabled}"
+
+  tls_ca_crt_pem = "${module.bootkube.etcd_ca_crt_pem}"
+  tls_crt_pem    = "${module.bootkube.etcd_crt_pem}"
+  tls_key_pem    = "${module.bootkube.etcd_key_pem}"
 }
 
 module "ignition-masters" {

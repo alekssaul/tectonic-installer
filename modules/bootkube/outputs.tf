@@ -51,3 +51,15 @@ output "systemd_service" {
 output "kube_dns_service_ip" {
   value = "${cidrhost(var.service_cidr, 10)}"
 }
+
+output "etcd_ca_crt_pem" {
+  value = "${join("", tls_self_signed_cert.etcd-ca.*.cert_pem)}"
+}
+
+output "etcd_crt_pem" {
+  value = "${join("", tls_locally_signed_cert.etcd.*.cert_pem)}"
+}
+
+output "etcd_key_pem" {
+  value = "${join("", tls_private_key.etcd.*.private_key_pem)}"
+}

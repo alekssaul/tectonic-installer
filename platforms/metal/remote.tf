@@ -1,5 +1,41 @@
+resource "null_resource" "etcd_secrets" {
+  count = "${var.tectonic_etcd_tls_enabled ? length(var.tectonic_metal_controller_domains) : 0}"
+
+  connection {
+    type    = "ssh"
+    host    = "${element(var.tectonic_metal_controller_domains, count.index)}"
+    user    = "core"
+    timeout = "60m"
+  }
+
+  provisioner "file" {
+    content     = "${module.bootkube.etcd_ca_crt_pem}"
+    destination = "$HOME/etcd_ca.crt"
+  }
+
+  provisioner "file" {
+    content     = "${module.bootkube.etcd_crt_pem}"
+    destination = "$HOME/etcd_client.crt"
+  }
+
+  provisioner "file" {
+    content     = "${module.bootkube.etcd_key_pem}"
+    destination = "$HOME/etcd_client.key"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo mkdir -p /etc/ssl/etcd",
+      "sudo mv /home/core/etcd_ca.crt /etc/ssl/etcd/ca.crt",
+      "sudo mv /home/core/etcd_client.crt /etc/ssl/etcd/client.crt",
+      "sudo mv /home/core/etcd_client.key /etc/ssl/etcd/client.key",
+    ]
+  }
+}
+
 resource "null_resource" "kubeconfig" {
-  count = "${length(var.tectonic_metal_controller_domains) + length(var.tectonic_metal_worker_domains)}"
+  count      = "${length(var.tectonic_metal_controller_domains) + length(var.tectonic_metal_worker_domains)}"
+  depends_on = ["null_resource.etcd_secrets"]
 
   connection {
     type    = "ssh"

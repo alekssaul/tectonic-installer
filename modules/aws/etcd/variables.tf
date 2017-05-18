@@ -74,3 +74,19 @@ variable "dns_enabled" {
   type        = "string"
   default     = "false"
 }
+
+variable "tls_enabled" {
+  default = false
+}
+
+variable "tls_ca_crt_pem" {
+  default = ""
+}
+
+variable "tls_key_pem" {
+  default = ""
+}
+
+variable "tls_crt_pem" {
+  default = ""
+}

@@ -44,7 +44,7 @@ resource "aws_route53_record" "worker_nodes" {
 # etcd
 
 resource "aws_route53_record" "etcd_srv_discover" {
-  name    = "_etcd-server._tcp"
+  name    = "${var.tectonic_etcd_tls_enabled ? "_etcd-server-ssl._tcp" : "_etcd-server._tcp"}"
   type    = "SRV"
   records = ["${formatlist("0 0 2380 %s", aws_route53_record.etc_a_nodes.*.fqdn)}"]
   ttl     = "300"
@@ -52,7 +52,7 @@ resource "aws_route53_record" "etcd_srv_discover" {
 }
 
 resource "aws_route53_record" "etcd_srv_client" {
-  name    = "_etcd-client._tcp"
+  name    = "${var.tectonic_etcd_tls_enabled ? "_etcd-client-ssl._tcp" : "_etcd-client._tcp"}"
   type    = "SRV"
   records = ["${formatlist("0 0 2379 %s", aws_route53_record.etc_a_nodes.*.fqdn)}"]
   ttl     = "60"
