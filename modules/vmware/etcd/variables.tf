@@ -89,3 +89,15 @@ variable hostname {
   type        = "map"
   description = "Hostname of the node"
 }
+
+variable "tls_ca_crt_pem" {
+  default = ""
+}
+
+variable "tls_key_pem" {
+  default = ""
+}
+
+variable "tls_crt_pem" {
+  default = ""
+}
