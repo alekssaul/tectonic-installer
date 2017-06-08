@@ -124,3 +124,9 @@ variable "kubeconfig" {
   type        = "string"
   description = "Contents of Kubeconfig"
 }
+
+variable "private_key" {
+  type        = "string"
+  description = "SSH private key file corresponding to tectonic_vmware_ssh_authorized_key. If not provided, SSH agent will be used."
+  default     = ""
+}
