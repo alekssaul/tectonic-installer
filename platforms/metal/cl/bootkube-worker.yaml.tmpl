@@ -1,6 +1,12 @@
 ---
 networkd:
   units:
+    - name: static.network
+      contents: |
+        [Match]
+        Name=eno*
+        [Network]
+        DHCP=no
     - name: 00-{{.coreos_network_adapter}}.network
       contents: |
         [Match]
