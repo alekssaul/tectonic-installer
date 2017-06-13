@@ -219,6 +219,18 @@ storage:
           restrict default nomodify nopeer noquery limited kod
           restrict 127.0.0.1
           restrict [::1]
+    - path: /etc/systemd/coredump.conf
+      filesystem: root
+      mode: 0644
+      contents:
+        inline: |
+           [Coredump]
+           Storage=external
+           Compress=yes
+           ProcessSizeMax=2G
+           ExternalSizeMax=300M
+           JournalSizeMax=300M
+           MaxUse=10G
 passwd:
   users:
     - name: core
