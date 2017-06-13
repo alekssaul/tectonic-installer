@@ -52,7 +52,7 @@ systemd:
             Environment="ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380"
             Environment="ETCD_INITIAL_CLUSTER={{.etcd_initial_cluster}}"
             Environment="ETCD_STRICT_RECONFIG_CHECK=true"
-            Environment="GOMAXPROCS=40"
+            Environment="GOMAXPROCS={{.coreos_etcd_maxprocs}}"
     - name: docker.service
       enable: true
       dropins:

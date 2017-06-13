@@ -54,6 +54,7 @@ resource "matchbox_group" "controller" {
     coreos_coreupdate_server = "${var.tectonic_metal_coreupdate_server}"
     coreos_ntp_server        = "${var.tectonic_metal_ntp_server}"
     coreos_registry          = "${var.tectonic_metal_internal_registry}"
+    coreos_etcd_maxprocs     = "${var.tectonic_metal_etcd_maxprocs}"
   }
 }
 

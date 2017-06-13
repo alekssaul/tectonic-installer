@@ -255,3 +255,8 @@ variable "tectonic_metal_internal_registry" {
   type        = "string"
   description = "Metal Internal Registry"
 }
+
+variable "tectonic_metal_etcd_maxprocs" {
+  type        = "string"
+  description = "Metal etcd maxprocs variable"
+}
