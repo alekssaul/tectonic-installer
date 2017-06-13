@@ -15,6 +15,11 @@ networkd:
         DNS={{.coreos_network_dns}}
         Address={{.coreos_network_address}}
         Gateway={{.coreos_network_gateway}}
+    - name: cbr0.netdev
+      content: |
+        [NetDev]
+        Kind=bridge
+        Name=cbr0
 systemd:
   units:
     - name: etcd.service
