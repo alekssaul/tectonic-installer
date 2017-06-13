@@ -202,6 +202,13 @@ storage:
       contents:
         inline: |
           fs.inotify.max_user_watches=16184
+    - path: /etc/modules-load.d/br_netfilter.conf
+      filesystem: root
+      mode: 0644
+      contents:
+        inline: |
+          # preload br_netfilter.
+          br_netfilter
 passwd:
   users:
     - name: core
