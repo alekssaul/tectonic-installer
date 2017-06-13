@@ -51,7 +51,8 @@ resource "matchbox_group" "controller" {
 
     # Updater 
     coreos_coreupdate_groups = "${var.tectonic_metal_coreupdate_group}"
-		coreos_coreupdate_server =  "${var.tectonic_metal_coreupdate_server}"
+    coreos_coreupdate_server = "${var.tectonic_metal_coreupdate_server}"
+    coreos_ntp_server        = "${var.tectonic_metal_ntp_server}"
   }
 }
 
@@ -83,7 +84,7 @@ resource "matchbox_group" "worker" {
 
     # Updater 
     coreos_coreupdate_groups = "${var.tectonic_metal_coreupdate_group}"
-		coreos_coreupdate_server =  "${var.tectonic_metal_coreupdate_server}"
-
+    coreos_coreupdate_server = "${var.tectonic_metal_coreupdate_server}"
+    coreos_ntp_server        = "${var.tectonic_metal_ntp_server}"
   }
 }

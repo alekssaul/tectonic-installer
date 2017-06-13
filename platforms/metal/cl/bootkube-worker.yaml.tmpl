@@ -169,6 +169,15 @@ storage:
         inline: |
           # preload br_netfilter.
           br_netfilter
+    - path: /etc/ntp.conf
+      filesystem: root
+      contents:
+        inline: |
+          server {{.coreos_ntp_server}}
+          server 
+          restrict default nomodify nopeer noquery limited kod
+          restrict 127.0.0.1
+          restrict [::1]
 passwd:
   users:
     - name: core
