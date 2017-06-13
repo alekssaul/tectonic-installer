@@ -54,6 +54,18 @@ systemd:
             Environment="ETCD_STRICT_RECONFIG_CHECK=true"
     - name: docker.service
       enable: true
+      dropins:
+        - name: 00-cpuset_fix.conf
+          contents: |
+            [Service]
+            ExecStartPre=-/usr/bin/mkdir /sys/fs/cgroup/cpuset/system.slice/
+            ExecStartPre=-/usr/bin/sh -c '/usr/bin/echo 0-$(expr $(nproc) - 1) > /sys/fs/cgroup/cpuset/system.slice/cpuset.cpus'
+            ExecStartPre=-/usr/bin/sh -c '/usr/bin/echo 0-$(expr $(cat /proc/zoneinfo  | grep Node | grep Normal | uniq | wc -l) - 1) > /sys/fs/cgroup/cpuset/system.slice/cpuset.mems'
+        - name: 02-limit_fix.conf
+          contents: |
+            [Service]
+            LimitNOFILE=1048576
+            LimitNPROC=250000
     - name: locksmithd.service
       mask: true
     - name: kubelet.path
