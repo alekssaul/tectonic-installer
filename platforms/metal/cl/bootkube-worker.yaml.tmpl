@@ -13,8 +13,20 @@ systemd:
   units:
     - name: docker.service
       enable: true
+    - name: ntpd.service
+      enable: true
     - name: locksmithd.service
       mask: true
+    - name: settimezone.service
+      enable: true
+      contents: |
+       [Unit]
+       Description=Set timezone
+       [Service]
+       ExecStart=/usr/bin/timedatectl set-timezone UTC
+       ExecStart=/sbin/hwclock --systohc --utc
+       RemainAfterExit=yes
+       Type=oneshot
     - name: kubelet.path
       enable: true
       contents: |

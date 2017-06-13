@@ -15,6 +15,18 @@ systemd:
       mask: true
     - name: etcd2.service
       mask: true
+    - name: ntpd.service
+      enable: true
+    - name: settimezone.service
+      enable: true
+      contents: |
+       [Unit]
+       Description=Set timezone
+       [Service]
+       ExecStart=/usr/bin/timedatectl set-timezone UTC
+       ExecStart=/sbin/hwclock --systohc --utc
+       RemainAfterExit=yes
+       Type=oneshot
     - name: etcd-member.service
       enable: {{.etcd_enabled}}
       dropins:
