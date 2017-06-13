@@ -234,3 +234,12 @@ variable "tectonic_metal_master_gateway" {
 }
 
 ##########################
+variable "tectonic_metal_coreupdate_group" {
+  type = "string"
+  description = "Metal CoreUpdate Group"
+}
+
+variable "tectonic_metal_coreupdate_server" {
+  type = "string"
+  description = "Metal CoreUpdate server"
+}

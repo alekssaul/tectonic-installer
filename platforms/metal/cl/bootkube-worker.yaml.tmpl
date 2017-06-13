@@ -105,6 +105,14 @@ systemd:
 
 storage:
   files:
+    - path: /etc/coreos/update.conf
+      filesystem: root
+      mode: 0644
+      contents:
+         inline: |
+          GROUP={{.coreos_coreupdate_groups}}
+          SERVER={{.coreos_coreupdate_server}}
+          REBOOT_STRATEGY=off
     - path: /etc/kubernetes/.empty
       filesystem: root
       mode: 0644
