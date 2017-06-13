@@ -36,6 +36,15 @@ systemd:
             [Service]
             LimitNOFILE=1048576
             LimitNPROC=250000
+    - name: systemd-journal-gatewayd.socket      
+      enable: true
+      contents: |
+        [Unit]
+        [Socket]
+        ListenStream=/var/run/journald.sock
+        Service=systemd-journal-gatewayd.service
+        [Install]
+        WantedBy=sockets.target
     - name: ntpd.service
       enable: true
     - name: locksmithd.service
