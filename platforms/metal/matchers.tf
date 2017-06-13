@@ -82,7 +82,7 @@ resource "matchbox_group" "worker" {
     coreos_network_gateway = "${var.tectonic_metal_worker_gateway}"
 
     # Updater 
-    coreos_coreupdate_group = "${var.tectonic_metal_coreupdate_group}"
+    coreos_coreupdate_groups = "${var.tectonic_metal_coreupdate_group}"
 		coreos_coreupdate_server =  "${var.tectonic_metal_coreupdate_server}"
 
   }
