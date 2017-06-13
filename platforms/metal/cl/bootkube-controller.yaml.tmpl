@@ -170,6 +170,17 @@ systemd:
 
         [Install]
         WantedBy=multi-user.target
+    - name: increase-nf_conntrack-connections.service
+      enable: true
+      contents: |
+        [Unit]
+        Description=Increase the number of connections in nf_conntrack. default is 65536
+
+        [Service]
+        ExecStartPre=-/usr/sbin/modprobe nf_conntrack
+        ExecStart=/bin/sh -c "sysctl -w net.netfilter.nf_conntrack_max=262144"
+        Restart=on-failure
+        RestartSec=05
 {{ if eq .exclude_tectonic "0" }}
     - name: tectonic.service
       contents: |
