@@ -196,7 +196,7 @@ storage:
       contents:
         inline: |
           127.0.0.1 localhost
-          {{.coreos_network_address}} {{.domain_name}}
+          {{.coreos_network_address}} {{.coreos_node_ip}}
           {{.coreos_registry}} internal-registry
 passwd:
   users:
