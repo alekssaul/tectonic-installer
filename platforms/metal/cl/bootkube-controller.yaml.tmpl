@@ -156,6 +156,20 @@ systemd:
         ExecStartPost=/bin/touch /opt/tectonic/init_bootkube.done
         [Install]
         WantedBy=multi-user.target
+    - name: insert-sg.service
+      enable: true
+      contents: |
+        [Unit]
+        Description=Insert sg kernel modules
+
+        [Service]
+        ExecStartPre=-/usr/sbin/modprobe sg
+        ExecStart=/bin/sh -c 'echo "sg" | tee /etc/modules-load.d/sg.conf'
+        Restart=on-failure
+        RestartSec=05
+
+        [Install]
+        WantedBy=multi-user.target
 {{ if eq .exclude_tectonic "0" }}
     - name: tectonic.service
       contents: |
