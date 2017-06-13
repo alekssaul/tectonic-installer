@@ -11,6 +11,10 @@ networkd:
         Gateway={{.coreos_network_gateway}}
 systemd:
   units:
+    - name: etcd.service
+      mask: true
+    - name: etcd2.service
+      mask: true
     - name: etcd-member.service
       enable: {{.etcd_enabled}}
       dropins:
