@@ -190,6 +190,14 @@ storage:
            ExternalSizeMax=300M
            JournalSizeMax=300M
            MaxUse=10G
+    - path: /etc/hosts
+      filesystem: root
+      mode: 0644
+      contents:
+        inline: |
+          127.0.0.1 localhost
+          {{.coreos_network_address}} {{.domain_name}}
+          {{.coreos_registry}} internal-registry
 passwd:
   users:
     - name: core

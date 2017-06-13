@@ -49,10 +49,11 @@ resource "matchbox_group" "controller" {
     coreos_network_address = "${var.tectonic_metal_master_ip["${count.index}"]}"
     coreos_network_gateway = "${var.tectonic_metal_master_gateway}"
 
-    # Updater 
+    # Verizon 
     coreos_coreupdate_groups = "${var.tectonic_metal_coreupdate_group}"
     coreos_coreupdate_server = "${var.tectonic_metal_coreupdate_server}"
     coreos_ntp_server        = "${var.tectonic_metal_ntp_server}"
+    coreos_registry          = "${var.tectonic_metal_internal_registry}"
   }
 }
 
@@ -82,9 +83,10 @@ resource "matchbox_group" "worker" {
     coreos_network_address = "${var.tectonic_metal_worker_ip["${count.index}"]}"
     coreos_network_gateway = "${var.tectonic_metal_worker_gateway}"
 
-    # Updater 
+    # Verizon 
     coreos_coreupdate_groups = "${var.tectonic_metal_coreupdate_group}"
     coreos_coreupdate_server = "${var.tectonic_metal_coreupdate_server}"
     coreos_ntp_server        = "${var.tectonic_metal_ntp_server}"
+    coreos_registry          = "${var.tectonic_metal_internal_registry}"
   }
 }

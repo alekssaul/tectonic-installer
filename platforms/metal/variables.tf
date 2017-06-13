@@ -190,17 +190,18 @@ EOF
 ##########################
 
 variable "tectonic_metal_networkadapter" {
-  type = "string"
+  type        = "string"
   description = "Network Adapter Interface ex: eth0"
 }
 
 variable "tectonic_metal_dnsserver" {
-  type = "string"
+  type        = "string"
   description = "DNS Server IP Address"
 }
 
 variable "tectonic_metal_worker_ip" {
   type = "map"
+
   description = <<EOF
 Metal Worker IP Address
 
@@ -212,12 +213,13 @@ EOF
 }
 
 variable "tectonic_metal_worker_gateway" {
-  type = "string"
+  type        = "string"
   description = "Metal Master Gateway IP Address"
 }
 
 variable "tectonic_metal_master_ip" {
   type = "map"
+
   description = <<EOF
 Metal Master IP Address
 
@@ -229,17 +231,27 @@ EOF
 }
 
 variable "tectonic_metal_master_gateway" {
-  type = "string"
+  type        = "string"
   description = "Metal Master Gateway IP Address"
 }
 
 ##########################
 variable "tectonic_metal_coreupdate_group" {
-  type = "string"
+  type        = "string"
   description = "Metal CoreUpdate Group"
 }
 
 variable "tectonic_metal_coreupdate_server" {
-  type = "string"
+  type        = "string"
   description = "Metal CoreUpdate server"
+}
+
+variable "tectonic_metal_ntp_server" {
+  type        = "string"
+  description = "Metal NTP Server"
+}
+
+variable "tectonic_metal_internal_registry" {
+  type        = "string"
+  description = "Metal Internal Registry"
 }
