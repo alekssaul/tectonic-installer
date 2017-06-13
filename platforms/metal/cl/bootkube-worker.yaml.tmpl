@@ -240,6 +240,10 @@ storage:
           {{.coreos_registry}} internal-registry
 passwd:
   users:
-    - name: core
+    - name: montana
       ssh_authorized_keys:
         - {{.ssh_authorized_key}}
+      create:
+        groups:
+          - docker
+          - sudo

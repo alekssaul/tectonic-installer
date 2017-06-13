@@ -4,7 +4,7 @@ resource "null_resource" "kubeconfig" {
   connection {
     type    = "ssh"
     host    = "${element(concat(var.tectonic_metal_controller_domains, var.tectonic_metal_worker_domains), count.index)}"
-    user    = "core"
+    user    = "montana"
     timeout = "60m"
   }
 
@@ -15,7 +15,7 @@ resource "null_resource" "kubeconfig" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo mv /home/core/kubeconfig /etc/kubernetes/kubeconfig",
+      "sudo mv /home/montana/kubeconfig /etc/kubernetes/kubeconfig",
     ]
   }
 }
@@ -30,7 +30,7 @@ resource "null_resource" "bootstrap" {
   connection {
     type    = "ssh"
     host    = "${element(var.tectonic_metal_controller_domains, 0)}"
-    user    = "core"
+    user    = "montana"
     timeout = "60m"
   }
 
@@ -43,7 +43,7 @@ resource "null_resource" "bootstrap" {
     inline = [
       "sudo mkdir -p /opt",
       "sudo rm -rf /opt/tectonic",
-      "sudo mv /home/core/tectonic /opt/",
+      "sudo mv /home/montana/tectonic /opt/",
       "sudo systemctl start ${var.tectonic_vanilla_k8s ? "bootkube" : "tectonic"}",
     ]
   }
