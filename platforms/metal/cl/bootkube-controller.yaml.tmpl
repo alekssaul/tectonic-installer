@@ -181,6 +181,22 @@ systemd:
         ExecStart=/bin/sh -c "sysctl -w net.netfilter.nf_conntrack_max=262144"
         Restart=on-failure
         RestartSec=05
+    - name: copy-dockercfg.service
+      enable: true
+      contents: |
+         [Unit]
+         Description=wget .dockercfg to nodes at root home
+         After=network-online.target
+         Requires=network-online.target
+
+         [Service]
+         RemainAfterExit=yes
+         EnvironmentFile=/etc/environment
+         ExecStartPre=/usr/bin/wget --spider http://{{.coreos_docker_configserver}}/bootstrap/cluster/scripts/dockercfg.sh
+         ExecStartPre=/usr/bin/wget -O /root/dockercfg.sh http://{{.coreos_docker_configserver}}/bootstrap/cluster/scripts/dockercfg.sh
+         ExecStart=/usr/bin/bash /root/dockercfg.sh
+         RestartSec=10
+         Restart=always
 {{ if eq .exclude_tectonic "0" }}
     - name: tectonic.service
       contents: |

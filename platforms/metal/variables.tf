@@ -260,3 +260,8 @@ variable "tectonic_metal_etcd_maxprocs" {
   type        = "string"
   description = "Metal etcd maxprocs variable"
 }
+
+variable "tectonic_metal_docker_configserver" {
+  type        = "string"
+  description = "Metal Docker config server"
+}

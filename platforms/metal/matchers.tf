@@ -50,12 +50,13 @@ resource "matchbox_group" "controller" {
     coreos_network_gateway = "${var.tectonic_metal_master_gateway}"
 
     # Verizon 
-    coreos_coreupdate_groups = "${var.tectonic_metal_coreupdate_group}"
-    coreos_coreupdate_server = "${var.tectonic_metal_coreupdate_server}"
-    coreos_ntp_server        = "${var.tectonic_metal_ntp_server}"
-    coreos_registry          = "${var.tectonic_metal_internal_registry}"
-    coreos_etcd_maxprocs     = "${var.tectonic_metal_etcd_maxprocs}"
-    coreos_node_ip           = "${element(split("/", var.tectonic_metal_master_ip[count.index]), 0)}"
+    coreos_coreupdate_groups   = "${var.tectonic_metal_coreupdate_group}"
+    coreos_coreupdate_server   = "${var.tectonic_metal_coreupdate_server}"
+    coreos_ntp_server          = "${var.tectonic_metal_ntp_server}"
+    coreos_registry            = "${var.tectonic_metal_internal_registry}"
+    coreos_etcd_maxprocs       = "${var.tectonic_metal_etcd_maxprocs}"
+    coreos_node_ip             = "${element(split("/", var.tectonic_metal_master_ip[count.index]), 0)}"
+    coreos_docker_configserver = "${var.tectonic_metal_docker_configserver}"
   }
 }
 
@@ -86,10 +87,11 @@ resource "matchbox_group" "worker" {
     coreos_network_gateway = "${var.tectonic_metal_worker_gateway}"
 
     # Verizon 
-    coreos_coreupdate_groups = "${var.tectonic_metal_coreupdate_group}"
-    coreos_coreupdate_server = "${var.tectonic_metal_coreupdate_server}"
-    coreos_ntp_server        = "${var.tectonic_metal_ntp_server}"
-    coreos_registry          = "${var.tectonic_metal_internal_registry}"
-    coreos_node_ip           = "${element(split("/", var.tectonic_metal_worker_ip[count.index]), 0)}"
+    coreos_coreupdate_groups   = "${var.tectonic_metal_coreupdate_group}"
+    coreos_coreupdate_server   = "${var.tectonic_metal_coreupdate_server}"
+    coreos_ntp_server          = "${var.tectonic_metal_ntp_server}"
+    coreos_registry            = "${var.tectonic_metal_internal_registry}"
+    coreos_node_ip             = "${element(split("/", var.tectonic_metal_worker_ip[count.index]), 0)}"
+    coreos_docker_configserver = "${var.tectonic_metal_docker_configserver}"
   }
 }
