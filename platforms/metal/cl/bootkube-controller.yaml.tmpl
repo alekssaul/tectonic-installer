@@ -16,10 +16,17 @@ networkd:
         Address={{.coreos_network_address}}
         Gateway={{.coreos_network_gateway}}
     - name: cbr0.netdev
-      content: |
+      contents: |
         [NetDev]
         Kind=bridge
         Name=cbr0
+    - name: cbr0.network
+      contents: |
+        [Match]
+        Name=cbr0
+
+        [Network]
+        Address={{.coreos_network_cbr0}}
 systemd:
   units:
     - name: etcd.service

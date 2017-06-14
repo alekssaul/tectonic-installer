@@ -265,3 +265,29 @@ variable "tectonic_metal_docker_configserver" {
   type        = "string"
   description = "Metal Docker config server"
 }
+
+variable "tectonic_metal_master_cbr0" {
+  type = "map"
+
+  description = <<EOF
+Metal Master IP Address
+
+Example: `tectonic_metal_master_cbr0 = {
+  "0" = "10.49.15.1/16"
+  "1" = "10.49.16.1/16"
+}`
+EOF
+}
+
+variable "tectonic_metal_worker_cbr0" {
+  type = "map"
+
+  description = <<EOF
+Metal Master IP Address
+
+Example: `tectonic_metal_worker_cbr0 = {
+  "0" = "10.49.17.1/16"
+  "1" = "10.49.18.1/16"
+}`
+EOF
+}

@@ -114,10 +114,47 @@ tectonic_metal_controller_macs = ""
 // Example: `["node1"]`
 tectonic_metal_controller_names = ""
 
+// Metal CoreUpdate Group
+tectonic_metal_coreupdate_group = ""
+
+// Metal CoreUpdate server
+tectonic_metal_coreupdate_server = ""
+
+// DNS Server IP Address
+tectonic_metal_dnsserver = ""
+
+// Metal Docker config server
+tectonic_metal_docker_configserver = ""
+
+// Metal etcd maxprocs variable
+tectonic_metal_etcd_maxprocs = ""
+
 // The domain name which resolves to Tectonic Ingress (i.e. worker node(s))
 // 
 // Example: `tectonic.example.com`
 tectonic_metal_ingress_domain = ""
+
+// Metal Internal Registry
+tectonic_metal_internal_registry = ""
+
+// Metal Master IP Address
+// 
+// Example: `tectonic_metal_master_cbr0 = {
+//   "0" = "10.49.15.1/16"
+//   "1" = "10.49.16.1/16"
+// }`
+tectonic_metal_master_cbr0 = ""
+
+// Metal Master Gateway IP Address
+tectonic_metal_master_gateway = ""
+
+// Metal Master IP Address
+// 
+// Example: `tectonic_metal_master_ip = {
+//   "0" = "192.168.2.71/24"
+//   "1" = "192.168.2.72/24"
+// }`
+tectonic_metal_master_ip = ""
 
 // The content of the Matchbox CA certificate to trust.
 // 
@@ -172,10 +209,35 @@ tectonic_metal_matchbox_http_url = ""
 // Example: `matchbox.example.com:8081`
 tectonic_metal_matchbox_rpc_endpoint = ""
 
+// Network Adapter Interface ex: eth0
+tectonic_metal_networkadapter = ""
+
+// Metal NTP Server
+tectonic_metal_ntp_server = ""
+
+// Metal Master IP Address
+// 
+// Example: `tectonic_metal_worker_cbr0 = {
+//   "0" = "10.49.17.1/16"
+//   "1" = "10.49.18.1/16"
+// }`
+tectonic_metal_worker_cbr0 = ""
+
 // Ordered list of worker domain names.
 // 
 // Example: `["node2.example.com", "node3.example.com"]`
 tectonic_metal_worker_domains = ""
+
+// Metal Master Gateway IP Address
+tectonic_metal_worker_gateway = ""
+
+// Metal Worker IP Address
+// 
+// Example: `tectonic_metal_worker_ip = {
+//   "0" = "192.168.2.71/24"
+//   "1" = "192.168.2.72/24"
+// }`
+tectonic_metal_worker_ip = ""
 
 // Ordered list of worker MAC addresses for matching machines.
 // 

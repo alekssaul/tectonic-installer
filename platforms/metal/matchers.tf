@@ -57,6 +57,7 @@ resource "matchbox_group" "controller" {
     coreos_etcd_maxprocs       = "${var.tectonic_metal_etcd_maxprocs}"
     coreos_node_ip             = "${element(split("/", var.tectonic_metal_master_ip[count.index]), 0)}"
     coreos_docker_configserver = "${var.tectonic_metal_docker_configserver}"
+    coreos_network_cbr0        = "${var.tectonic_metal_worker_cbr0["${count.index}"]}"
   }
 }
 
@@ -93,5 +94,6 @@ resource "matchbox_group" "worker" {
     coreos_registry            = "${var.tectonic_metal_internal_registry}"
     coreos_node_ip             = "${element(split("/", var.tectonic_metal_worker_ip[count.index]), 0)}"
     coreos_docker_configserver = "${var.tectonic_metal_docker_configserver}"
+    coreos_network_cbr0        = "${var.tectonic_metal_worker_cbr0["${count.index}"]}"
   }
 }
