@@ -74,6 +74,10 @@ systemd:
             [Service]
             LimitNOFILE=1048576
             LimitNPROC=250000
+        - name: 03-docker_param_fix.conf
+          contents: |
+            [Service]
+            Environment="DOCKER_OPTS=-b cbr0 --fixed-cidr={{.coreos_network_cbr0}}   --iptables=false --log-opt max-size=1536m --log-opt max-file=5"
     - name: systemd-journal-gatewayd.socket      
       enable: true
       contents: |
