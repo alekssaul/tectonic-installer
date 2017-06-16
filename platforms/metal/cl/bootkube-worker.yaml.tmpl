@@ -14,12 +14,15 @@ networkd:
         [Network]
         DNS={{.coreos_network_dns}}
         Address={{.coreos_network_address}}
-        Gateway={{.coreos_network_gateway}}
+        Gateway={{.coreos_network_gateway}}        
+        [Route]
+        Destination={{.coreos_interface_route_destination}}
+        Gateway={{.coreos_interface_route_gateway}}    
     - name: cbr0.netdev
       contents: |
         [NetDev]
         Kind=bridge
-        Name=cbr0
+        Name=cbr0 
     - name: cbr0.network
       contents: |
         [Match]
@@ -46,7 +49,7 @@ systemd:
         - name: 03-docker_param_fix.conf
           contents: |
             [Service]
-            Environment="DOCKER_OPTS=-b cbr0 --fixed-cidr={{.coreos_network_cbr0}}   --iptables=false --log-opt max-size=1536m --log-opt max-file=5"
+            Environment="DOCKER_OPTS=-b cbr0 --fixed-cidr={{.coreos_network_cbr0}} --iptables=false --log-opt max-size=1536m --log-opt max-file=5"
     - name: systemd-journal-gatewayd.socket      
       enable: true
       contents: |
@@ -186,6 +189,18 @@ systemd:
          ExecStart=/usr/bin/bash /root/dockercfg.sh
          RestartSec=10
          Restart=always
+    - name: post-boot-fix.service
+      enable: true
+      contents: |
+         [Unit]
+         Description=All the post boot workarounds can be added here
+         After=network.target
+         Before=docker.service
+         [Service]
+         ExecStart=/bin/sh -c "echo 1 > /proc/sys/net/ipv4/conf/{{.coreos_network_adapter}}/proxy_arp"
+         
+         RemainAfterExit=yes
+         Type=oneshot
 storage:
   files:
     - path: /etc/coreos/update.conf
@@ -254,6 +269,7 @@ passwd:
     - name: montana
       ssh_authorized_keys:
         - {{.ssh_authorized_key}}
+      password_hash: "$1$ifYWZO4T$lXPReGni./r54EX8Nr0.K0"
       create:
         groups:
           - docker

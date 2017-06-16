@@ -291,3 +291,13 @@ Example: `tectonic_metal_worker_cbr0 = {
 }`
 EOF
 }
+
+variable "tectonic_metal_nic_route_destination" {
+  type        = "string"
+  description = "Metal routes to add to the nic"
+}
+
+variable "tectonic_metal_nic_route_gateway" {
+  type        = "string"
+  description = "Metal route gateway to add to the nic"
+}
