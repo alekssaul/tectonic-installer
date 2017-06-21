@@ -1,8 +1,7 @@
 export CGO_ENABLED=0
-export VERSION=$(shell ../git-version)
 
 OS=$(shell uname | tr A-Z a-z)
-LD_FLAGS="-w -X github.com/coreos/tectonic-installer/installer/cmd/installer.Version=$(VERSION)"
+LD_FLAGS="-w"
 INSTALLER_OPTS=--address=127.0.0.1:4444 --open-browser=false --log-level=debug --dev
 
 REPO=github.com/coreos/tectonic-installer/installer
@@ -11,7 +10,10 @@ REPO=github.com/coreos/tectonic-installer/installer
 find=$(shell [ -d $(1) ] && find $(1) -type f $(2) | sed 's/ /\\ /g')
 
 GO_FILES=$(call find,.,-name '*.go')
-SHELL_FILES=$(call find,scripts,-name '*.sh')
+SHELL_FILES_SCRIPTS=$(call find,scripts,-name '*.sh')
+SHELL_FILES_MODULES=$(call find,../modules,-name '*.sh')
+SHELL_FILES_TESTS=$(call find,../tests,-name '*.sh')
+SHELL_FILES=$(SHELL_FILES_SCRIPTS) $(SHELL_FILES_MODULES) $(SHELL_FILES_TESTS)
 
 .PHONY: all
 all:
@@ -93,16 +95,13 @@ vendor: glide.yaml
 	glide-vc --use-lock-file --no-tests --only-code
 
 .PHONY: tools
-tools: bin/go-bindata bin/sanity bin/golint
+tools: bin/go-bindata bin/golint
 
 bin/golint:
 	go build -o bin/golint $(REPO)/vendor/github.com/golang/lint/golint
 
 bin/go-bindata:
 	go build -o bin/go-bindata $(REPO)/vendor/github.com/jteeuwen/go-bindata/go-bindata
-
-bin/sanity:
-	go test tests/sanity/k8s_test.go -c -o bin/sanity
 
 .PHONY: launch-installer
 launch-installer:
