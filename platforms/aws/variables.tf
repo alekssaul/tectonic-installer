@@ -267,3 +267,13 @@ Example:
  * Role Name = tectonic-installer
 EOF
 }
+
+variable "tectonic_aws_s3_bucketname" {
+  type    = "string"
+  default = ""
+
+  description = <<EOF
+(optional) Name of the S3 Bucketname to use. 
+If not provided, default syntax (a$CLUSTERNAME-$MD5) will be used
+EOF
+}
