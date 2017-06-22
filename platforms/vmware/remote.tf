@@ -1,5 +1,5 @@
 resource "null_resource" "etcd_secrets" {
-  count = "${var.tectonic_etcd_count}"
+  count = "${var.tectonic_experimental ? 0 : var.tectonic_etcd_count }"
 
   connection {
     type    = "ssh"
