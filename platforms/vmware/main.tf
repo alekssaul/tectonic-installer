@@ -49,8 +49,8 @@ module "masters" {
   bootkube_service          = "${module.bootkube.systemd_service}"
   tectonic_service          = "${module.tectonic.systemd_service}"
   tectonic_service_disabled = "${var.tectonic_vanilla_k8s}"
-  kube_image_url            = "${replace(var.tectonic_container_images["hyperkube"],var.tectonic_image_re,"$1")}"
-  kube_image_tag            = "${replace(var.tectonic_container_images["hyperkube"],var.tectonic_image_re,"$2")}"
+  kube_image_url            = "${element(split(":", var.tectonic_container_images["hyperkube"]), 0)}"
+  kube_image_tag            = "${element(split(":", var.tectonic_container_images["hyperkube"]), 1)}"
 
   vmware_datacenter       = "${var.tectonic_vmware_datacenter}"
   vmware_cluster          = "${var.tectonic_vmware_cluster}"
@@ -63,7 +63,6 @@ module "masters" {
   vmware_folder           = "${vsphere_folder.tectonic_vsphere_folder.path}"
   kubeconfig              = "${module.bootkube.kubeconfig}"
   private_key             = "${var.tectonic_vmware_ssh_private_key_path}"
-  image_re                = "${var.tectonic_image_re}"
 }
 
 module "workers" {
@@ -82,8 +81,8 @@ module "workers" {
   container_images    = "${var.tectonic_container_images}"
   bootkube_service    = ""
   tectonic_service    = ""
-  kube_image_url      = "${replace(var.tectonic_container_images["hyperkube"],var.tectonic_image_re,"$1")}"
-  kube_image_tag      = "${replace(var.tectonic_container_images["hyperkube"],var.tectonic_image_re,"$2")}"
+  kube_image_url      = "${element(split(":", var.tectonic_container_images["hyperkube"]), 0)}"
+  kube_image_tag      = "${element(split(":", var.tectonic_container_images["hyperkube"]), 1)}"
 
   vmware_datacenter       = "${var.tectonic_vmware_datacenter}"
   vmware_cluster          = "${var.tectonic_vmware_cluster}"
@@ -96,5 +95,4 @@ module "workers" {
   vmware_folder           = "${vsphere_folder.tectonic_vsphere_folder.path}"
   kubeconfig              = "${module.bootkube.kubeconfig}"
   private_key             = "${var.tectonic_vmware_ssh_private_key_path}"
-  image_re                = "${var.tectonic_image_re}"
 }
