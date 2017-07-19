@@ -8,10 +8,6 @@ metadata:
     ingress.kubernetes.io/use-port-in-redirects: "true"
     kubernetes.io/ingress.class: "tectonic"
 spec:
-  tls:
-  - hosts:
-    - ${console_base_address}
-    secretName: tectonic-ingress-tls-secret
   rules:
   - host: ${console_base_address}
     http:
