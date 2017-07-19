@@ -126,6 +126,10 @@ module "masters" {
   root_volume_type = "${var.tectonic_aws_master_root_volume_type}"
   root_volume_size = "${var.tectonic_aws_master_root_volume_size}"
   root_volume_iops = "${var.tectonic_aws_master_root_volume_iops}"
+
+  vpc_id = "${module.vpc.vpc_id}"
+
+  alb_arn = "${var.tectonic_aws_alb_acm_arn}"
 }
 
 module "ignition-workers" {

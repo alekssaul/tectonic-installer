@@ -105,3 +105,12 @@ variable "master_iam_role" {
   default     = ""
   description = "IAM role to use for the instance profiles of master nodes."
 }
+
+variable "vpc_id" {
+  type = "string"
+}
+
+variable "alb_arn" {
+  type = "string"
+  default = ""
+}
