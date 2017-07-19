@@ -271,3 +271,8 @@ Example:
  * Role Name = tectonic-installer
 EOF
 }
+
+variable "tectonic_aws_alb_acm_arn" {
+  type        = "string"  
+  description = "ARN of Tectonic console ALB Certificate"
+}
