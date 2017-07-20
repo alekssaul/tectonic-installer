@@ -84,8 +84,8 @@ module "tectonic" {
 }
 
 module "flannel-vxlan" {
-  source = "../../modules/net/flannel-vxlan"
-
+  source            = "../../modules/net/flannel-vxlan"
+  enabled           = "${var.tectonic_cni_provider == "flannel-vxlan" ? true : false}"
   flannel_image     = "${var.tectonic_container_images["flannel"]}"
   flannel_cni_image = "${var.tectonic_container_images["flannel_cni"]}"
   cluster_cidr      = "${var.tectonic_cluster_cidr}"
@@ -119,5 +119,5 @@ data "archive_file" "assets" {
   # Additionally, data sources do not support managing any lifecycle whatsoever,
   # and therefore, the archive is never deleted. To avoid cluttering the module
   # folder, we write it in the TerraForm managed hidden folder `.terraform`.
-  output_path = "./.terraform/generated_${sha1("${module.tectonic.id} ${module.bootkube.id} ${module.flannel-vxlan.id} ${module.calico-network-policy.id}")}.zip"
+  output_path = "./.terraform/generated_${sha1("${module.tectonic.id} ${module.bootkube.id} ${module.flannel-vxlan.id} ${module.calico-network-policy.id} ${module.kube-router.id}")}.zip"
 }
