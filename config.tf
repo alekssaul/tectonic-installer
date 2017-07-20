@@ -62,6 +62,8 @@ variable "tectonic_container_images" {
     tectonic_etcd_operator          = "quay.io/coreos/tectonic-etcd-operator:v0.0.1"
     calico                          = "quay.io/calico/node:v1.3.0"
     calico_cni                      = "quay.io/calico/cni:v1.9.1-4-g23fcd5f"
+    busybox                         = "docker.io/library/busybox"
+    kube-router                     = "cloudnativelabs/kube-router"
   }
 }
 
@@ -389,5 +391,13 @@ variable "tectonic_calico_network_policy" {
 [ALPHA] If set to true, calico network policy support will be deployed.
 WARNING: Enabling an alpha feature means that future updates may become unsupported.
 This should only be enabled on clusters that are meant to be short-lived to begin validating the alpha feature.
+EOF
+}
+
+variable "tectonic_cni_provider" {
+  default = "flannel-vxlan"
+
+  description = <<EOF
+[ALPHA] Selection of CNI network provider. Options are flannel-vxlan or kube-router
 EOF
 }
