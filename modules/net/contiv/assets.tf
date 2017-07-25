@@ -12,6 +12,7 @@ data "template_file" "contiv" {
     svc_subnet     = "${var.svc_subnet}"
     tls_key = "${base64encode(tls_private_key.contiv.private_key_pem)}"
     tls_cert = "${base64encode(tls_self_signed_cert.contiv.cert_pem)}"
+    master_node = "${var.master_node}"
     
   }
 }

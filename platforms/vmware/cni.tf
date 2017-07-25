@@ -15,4 +15,5 @@ module "contiv" {
   api_server  = "${module.masters.ip_address[0]}"
   bootkube_id = "${module.bootkube.id}"
   svc_subnet  = "${var.tectonic_service_cidr}"
+  master_node = "${var.tectonic_vmware_master_hostnames["0"]}"
 }
