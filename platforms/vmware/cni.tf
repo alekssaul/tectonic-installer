@@ -17,3 +17,10 @@ module "contiv" {
   svc_subnet  = "${var.tectonic_service_cidr}"
   master_node = "${var.tectonic_vmware_master_hostnames["0"]}"
 }
+
+module "calico-bgp" {
+  source       = "../../modules/net/calico-bgp"
+  enabled      = "${var.tectonic_cni_provider == "calico-bgp" ? true : false}"
+  service_cidr = "${var.tectonic_service_cidr}"
+  bootkube_id  = "${module.bootkube.id}"
+}
